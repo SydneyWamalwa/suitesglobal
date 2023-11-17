@@ -39,12 +39,17 @@ body, h1, h2, p, ul, li, form {
 
   /* Navigation Bar */
   .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     background-color: #333;
     color: #fff;
     padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    z-index: 1000; /* Ensure the header is above other elements */
   }
 
   .navbar img {
@@ -60,8 +65,15 @@ body, h1, h2, p, ul, li, form {
     text-decoration: none;
     color: #fff;
     margin: 0 15px;
+    transition: color 0.3s ease;
+  }
+  .navbar a:hover {
+    color: #ffd700; /* Change to the desired hover color */
   }
 
+  body {
+    margin-top: 80px; /* Adjust this value based on the header's height */
+  }
   /* Header Section */
   .header {
     position: relative;
