@@ -3,14 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
   <title>Suites Global</title>
 </head>
 <body>
 
   <!-- Navigation Bar -->
   <nav class="navbar">
-    <img src="images/B&N International Ltd.png" alt="Suites Global Logo">
+    <a href="#Home">
+      <img src="/static/images/B&N International Ltd.png" alt="Suites Global Logo">
+  </a>
     <ul>
       <li><a href="#about">About Us</a></li>
       <li><a href="#what-we-do">What We Do</a></li>
@@ -19,8 +21,8 @@
   </nav>
 
   <!-- Header Section -->
-  <header class="header">
-    <img src="images/housing.jpg" alt="Suits Global Header Image">
+  <header class="header" id="Home">
+    <img src="/static/images/housing.jpg" alt="Suits Global Header Image">
     <div class="header-content">
       <h1>Welcome to Suites Global</h1>
       <p>Your Destination for Premium Suits and Tailored Elegance</p>
@@ -32,15 +34,15 @@
       <h2>Our commitment is to make your stay memorable</h2>
       <div class="commitment-icons">
         <div class="icon">
-          <img src="images/star.png" alt="" width="100" height="100">
+          <img src="/static/images/star.png" alt="" width="100" height="100">
           <p>Quality Stays</p>
         </div>
         <div class="icon">
-          <img src="images/apartment.png" alt="" width="100" height="100">
+          <img src="/static/images/apartment.png" alt="" width="100" height="100">
           <p>100+ Apartments</p>
         </div>
         <div class="icon">
-          <img src="images/double-bed.png" alt="" width="100" height="100">
+          <img src="/static/images/double-bed.png" alt="" width="100" height="100">
           <p>Cozy Stays</p>
         </div>
       </div>
@@ -55,15 +57,15 @@
         <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit tempore molestiae similique sed laborum! Cupiditate quos est voluptas veritatis, tempora voluptatum ea dicta velit temporibus, fugiat doloribus, excepturi quidem earum!</p>
         <div class="image-text-container">
             <div class="image-text">
-                <img src="images/hse.jpeg" alt="About Us Image" width="100" height="100">
+                <img src="/static/images/hse.jpeg" alt="About Us Image" width="100" height="100">
                 <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit...</p>
             </div>
             <div class="image-text">
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
-                <img src="images/apart.jpeg" alt="About Us Image">
+                <img src="/static/images/apart.jpeg" alt="About Us Image">
             </div>
             <div class="image-text">
-                <img src="images/city.jpg" alt="About Us Image">
+                <img src="/static/images/city.jpg" alt="About Us Image">
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
             </div>
         </div>
@@ -79,9 +81,9 @@
         <button type="button" id="button" onclick="window.location.href='properties.html';">View Properties</button>
       </div>
       <div class="image-container">
-        <img src="images/prop3.webp" alt="What We Do Image" width="300" height="300">
-        <img src="images/prop1.jpeg" alt="What We Do Image" width="300" height="300">
-        <img src="images/prop2.jpg" alt="What We Do Image" width="300" height="300">
+        <img src="/static/images/prop3.webp" alt="What We Do Image" width="300" height="300">
+        <img src="/static/images/prop1.jpeg" alt="What We Do Image" width="300" height="300">
+        <img src="/static/images/prop2.jpg" alt="What We Do Image" width="300" height="300">
       </div>
     </div>
 </section>
@@ -128,6 +130,11 @@
   <footer class="footer">
     <div class="container">
       <p>&copy; 2023 Suits Global. All rights reserved.</p>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#what-we-do">What We Do</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+      </ul>
     </div>
   </footer>
 
