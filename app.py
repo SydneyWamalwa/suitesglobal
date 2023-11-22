@@ -226,7 +226,8 @@ def booking(property_id):
 
 @app.route('/submit_booking', methods=['POST'])
 def book():
-    return redirect('paymentsuccessful.html')
+    return render_template('pay.html')
+
 
 
 if __name__ == '__main__':
