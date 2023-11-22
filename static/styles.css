@@ -122,6 +122,7 @@ body, h1, h2, p, ul, li, form {
     align-items: center;
 }
 
+
 .about-section {
     background-color: #f9f9f9;
     padding: 20px 0;
@@ -165,10 +166,39 @@ body, h1, h2, p, ul, li, form {
     text-align: center;
 }
 .what-we-do-section{
-    background-color: #333;
+    background-color: white;
 }
 .what-we-do-section h2{
     text-align: start;
+}
+.Destination {
+  text-align: center;
+  background-color: #333;
+}
+
+.image-container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.image-container figure {
+  text-align: center;
+  margin: 0 10px;
+}
+
+.image-container img {
+  width: 300px;
+  height: 300px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.image-container figcaption {
+  font-style: italic;
+}
+.image-container img:hover::after {
+  display: block;
 }
 .header-container {
     display: flex;

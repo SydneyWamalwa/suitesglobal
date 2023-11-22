@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Property</title>
+</head>
+<body>
+    <h2>List Your Property</h2>
+
+    <!-- Property Listing Form -->
+    <form id="propertyForm" action="/list_property" method="post" enctype="multipart/form-data">
+        <label for="property_name">Property Name:</label>
+        <input type="text" id="property_name" name="property_name" required>
+
+        <label for="property_description">Property Description:</label>
+        <textarea id="property_description" name="property_description" required></textarea>
+
+        <label for="property_image">Property Image:</label>
+        <input type="file" id="property_image" name="property_image" accept="image/*" required>
+
+        <label for="thumbnail_image">Thumbnail Image:</label>
+        <input type="file" id="thumbnail_image" name="thumbnail_image" accept="image/*" required>
+
+        <button type="submit">List Property</button>
+    </form>
+</body>
+</html>
