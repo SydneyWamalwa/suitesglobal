@@ -29,33 +29,48 @@
             margin: 0 auto; /* Center the image */
         }
 
-        .image-caption {
+        .image-caption-container {
             position: absolute;
-            bottom: 0;
+            bottom: -3%;
             left: 50%;
             transform: translateX(-50%);
-            width: 90%; /* Adjust the width as needed */
-            background-color: rgba(0, 0, 0, 0.7);
+            width: 80%; /* Adjust the width as needed */
+            background-color: rgba(0, 0, 0, 0.0); /* Adjust the transparency (0.5 is 50% transparent) */
             color: #fff;
             padding: 10px;
             text-align: center;
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
+            border-radius: 8px;
+        }
+
+        .image-caption {
+            margin-bottom: 5px;
+        }
+
+        .book-button {
+            display: block;
+            margin-top: 5px;
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
     <div class="image-grid">
-        <div class="image-item">
-            <img src="/static/images/prop1.jpeg" alt="Image 1">
-            <div class="image-caption">Vipingo Ridge</div>
-        </div>
-        <div class="image-item">
-            <img src="/static/images/prop2.jpg" alt="Image 2">
-            <div class="image-caption">Palm View</div>
-        </div>
-        <!-- Add more image items as needed -->
+        {% for property_data in properties_data %}
+            <div class="image-item">
+                <img src="/{{ property_data[1] }}" alt="{{ property_data[0] }}">
+                <div class="image-caption-container">
+                    <div class="image-caption">{{ property_data[0] }}</div>
+                    <div><a href="/booking/{{ property_data[2] }}" class="book-button">Book</a></div>
+                </div>
+            </div>
+        {% endfor %}
     </div>
 
 </body>

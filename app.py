@@ -107,9 +107,25 @@ def success():
     user_name = session.get('name', 'Guest')
     return render_template('success.html', user_name=user_name)
 
+
 @app.route('/properties')
 def properties():
-    return render_template('properties.html')
+    try:
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT name, thumbnail FROM properties")
+            properties_data = cursor.fetchall()
+
+        return render_template('properties.html', properties_data=properties_data)
+
+    except Exception as e:
+        print(f"Error fetching properties: {e}")
+        properties_data = []
+        return render_template('properties.html', properties_data=properties_data, error=str(e))
+
+
+
+
 
 
 @app.route('/list_property', methods=['GET', 'POST'])
@@ -123,9 +139,13 @@ def property_listing():
             property_image = request.files['property_image']
             thumbnail_image = request.files['thumbnail_image']
 
-            # Save the images to a folder (you might want to customize the folder path)
-            property_image_path = os.path.join('uploads', property_image.filename)
-            thumbnail_image_path = os.path.join('uploads', thumbnail_image.filename)
+            # Save the images to a folder within the 'static' directory
+            property_image_path = os.path.join('static','uploads', property_image.filename)
+            thumbnail_image_path = os.path.join('static','uploads', thumbnail_image.filename)
+
+            # Replace backslashes with forward slashes
+            property_image_path = property_image_path.replace('\\', '/')
+            thumbnail_image_path = thumbnail_image_path.replace('\\', '/')
 
             property_image.save(property_image_path)
             thumbnail_image.save(thumbnail_image_path)
@@ -147,7 +167,6 @@ def property_listing():
 
     # If it's a GET request, simply render the property_listing.html template
     return render_template('property_listing.html')
-
 
 if __name__ == '__main__':
     app.run(debug=True)
