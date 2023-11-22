@@ -224,9 +224,9 @@ def booking(property_id):
         print(f"Error fetching property information: {e}")
         return render_template('error.html', error=str(e))
 
-
-
-
+@app.route('/submit_booking', methods=['POST'])
+def book():
+    return redirect('paymentsuccessful.html')
 
 
 if __name__ == '__main__':

@@ -225,7 +225,9 @@ p {
                     <h2>Price: <span id="calculated-price">{{ property_data[9] }}</span></h2>
                 </div>
 
-                <button type="submit">Submit Booking</button>
+                <form action="/submit_booking" method="post">
+                    <button type="submit">Submit Booking</button>
+                </form>
 
                             </form>
         </div>
