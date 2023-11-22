@@ -53,6 +53,29 @@
         button:hover {
             background-color: #45a049;
         }
+
+        .amenity-image {
+            width: 50px; /* Adjust the width as needed */
+            height: 50px; /* Adjust the height as needed */
+            margin-right: 10px; /* Adjust the spacing between images */
+        }
+
+
+        .amenity-container {
+    display: flex;
+    align-items: center;
+}
+
+.amenity-container img {
+    margin-right: 10px; /* Adjust the margin as needed */
+}
+
+.amenity-container label {
+    display: flex;
+    align-items: center;
+}
+
+
     </style>
 </head>
 <body>
@@ -71,6 +94,117 @@
 
         <label for="thumbnail_image">Thumbnail Image:</label>
         <input type="file" id="thumbnail_image" name="thumbnail_image" accept="image/*" required><br>
+
+        <label for="thumbnail_image">Thumbnail Image:</label>
+        <input type="file" id="interior1" name="Additional Image1" accept="image/*" required><br>
+
+        <label for="thumbnail_image">Thumbnail Image:</label>
+        <input type="file" id="interior2" name="Additional Image2" accept="image/*" required><br>
+
+        <label for="thumbnail_image">Thumbnail Image:</label>
+        <input type="file" id="interior3" name="Additional Image3" accept="image/*" required><br>
+
+        <label for="thumbnail_image">Thumbnail Image:</label>
+        <input type="file" id="interior4" name="Additional Image4" accept="image/*" required><br>
+
+        <label for="Price">Price per Night:</label>
+        <textarea id="Price" name="Price" required></textarea><br>
+
+        <label for="amenities">Amenities:</label>
+        <div>
+            <!-- Checkboxes with associated images and text for amenities -->
+            <div class="amenity-container">
+                <input type="checkbox" id="amenity1" name="amenities[]" value="Hot Shower">
+                <label for="amenity1">
+                    <img class="amenity-image" src="/static/images/bathtub.png" alt="Amenity 1">
+                    Hot Shower
+                </label>
+            </div>
+
+
+            <div class="amenity-container">
+                <input type="checkbox" id="amenity2" name="amenities[]" value="Water Kettle">
+                <label for="amenity2">
+                    <img class="amenity-image" src="/static/images/electric-kettle.png" alt="Amenity 2">
+                    Water Kettle
+                </label>
+            </div>
+
+            <div class="amenity-container">
+                <input type="checkbox" id="amenity3" name="amenities[]" value="Breakfast">
+                <label for="amenity3">
+                    <img class="amenity-image" src="/static/images/english-breakfast.png" alt="Amenity 3">
+                    Breakfast
+                </label>
+            </div>
+
+            <div class="amenity-container">
+                <input type="checkbox" id="amenity3" name="amenities[]" value="Free Parking">
+                <label for="amenity3">
+                    <img class="amenity-image" src="/static/images/garage-car.png" alt="Amenity 3">
+                    Free Parking
+                </label>
+            </div>
+
+            <div class="amenity-container">
+                <input type="checkbox" id="amenity3" name="amenities[]" value="Kitchen">
+                <label for="amenity3">
+                    <img class="amenity-image" src="/static/images/kitchen.png" alt="Amenity 3">
+                    Kitchen
+                </label>
+            </div>
+
+            <div class="amenity-container">
+                <input type="checkbox" id="amenity3" name="amenities[]" value="Wi-Fi">
+                <label for="amenity3">
+                    <img class="amenity-image" src="/static/images/wi-fi.png" alt="Amenity 3">
+                    Wi-Fi
+                </label>
+            </div>
+
+            <div class="amenity-container">
+                <input type="checkbox" id="amenity3" name="amenities[]" value="Shampoo">
+                <label for="amenity3">
+                    <img class="amenity-image" src="/static/images/shampoo.png" alt="Amenity 3">
+                    Shampoo
+                </label>
+            </div>
+
+            <div class="amenity-container">
+                <input type="checkbox" id="amenity3" name="amenities[]" value="Shopping Center">
+                <label for="amenity3">
+                    <img class="amenity-image" src="/static/images/shopping-center.png" alt="Amenity 3">
+                    Shopping Center
+                </label>
+            </div>
+
+            <div class="amenity-container">
+                <input type="checkbox" id="amenity3" name="amenities[]" value="Private Living Room">
+                <label for="amenity3">
+                    <img class="amenity-image" src="/static/images/sofa.png" alt="Amenity 3">
+                    Private Living Room
+                </label>
+            </div>
+
+            <div class="amenity-container">
+                <input type="checkbox" id="amenity3" name="amenities[]" value="Luggage Dropped Off Allowed">
+                <label for="amenity3">
+                    <img class="amenity-image" src="/static/images/suitcase.png" alt="Amenity 3">
+                    Luggage Dropped Off Allowed
+                </label>
+            </div>
+
+            <div class="amenity-container">
+                <input type="checkbox" id="amenity3" name="amenities[]" value="Swimming Pool">
+                <label for="amenity3">
+                    <img class="amenity-image" src="/static/images/swimming-pool.png" alt="Amenity 3">
+                    Swimming Pool
+                </label>
+            </div>
+
+            <!-- Add more checkboxes with images and text as needed -->
+        </div>
+
 
         <button type="submit">List Property</button>
     </form>

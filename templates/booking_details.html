@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Details</title>
+   <!-- Pikaday CSS -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.8.2/css/pikaday.css" integrity="sha512-xoQ+h19cVJGZcB5/rFb2H4n21Y9K3hiuBOZKEwdNXv1xb/nhlt6vhbaPH3sNvejkTWwWPpuXXfmbRI0Qs/RD8Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- Pikaday JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js" integrity="sha512-CryKbMe7sjSCDPl18jtJI5DR5jtkUWxPXWaLCst6QjH8wxDexfRJic2WRmRXmstr2Y8SxDDWuBO6CQC6IE4KTA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.8.2/pikaday.min.js" integrity="sha512-dkMzAitT+RFxzaHsyXAd1KtYpmuP/Jl6yOPYUu1s20dLfizq6cpbzDFNSAANb3IZbyhVhAbZxAyeqORpjkF3oQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<style>
+        .body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.booking-details-container {
+    max-width: 800px;
+    margin: 20px auto; /* Center horizontally */
+    background-color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    align-items: center; /* Center vertically */
+}
+
+
+
+.booking-details-container1 {
+    max-width: 400px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.0);
+    text-align: center;
+    align-self: start;
+    margin-left: 0; /* Adjust the left margin as needed */
+}
+
+.booking-details-container2 {
+    max-width: 400px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.0);
+    text-align: center;
+    margin-left: auto; /* This will push it to the right */
+}
+
+
+
+.property-image {
+    width: 100%;
+    height: 400px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.additional-images-container {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr); /* 2 rows */
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    gap: 10px; /* Adjust the gap as needed */
+    margin-bottom: 20px;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+
+.additional-image {
+    width: 100%; /* Adjust the width as needed */
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.additional-image img {
+    width: 100%;
+    height: 100px;
+    border-radius: 8px;
+    display: flex;
+    margin: 0 auto; /* Center the image */
+}
+
+h2 {
+    color: #3498db;
+    font-size: large;
+
+}
+
+p {
+    color: black;
+    margin-bottom: 20px;
+}
+
+.book-button {
+            display: block;
+            margin-top: 5px;
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+        }
+.container{
+    display: flex;
+}
+
+.booking-details-container1,
+.booking-details-container2 {
+    max-width: 400px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.0);
+    text-align: center;
+    margin: 0 50px; /* Adjust the margin to reduce the distance */
+}
+
+.booking-details-container1 {
+    align-self: start;
+    margin-left: 30px; /* Adjust the left margin as needed */
+}
+
+.booking-details-container2 {
+    margin-left: auto; /* This will push it to the right */
+}
+
+.booking-details-container2 {
+            max-width: 400px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Add more styles as needed */
+    </style>
+</head>
+<body>
+
+    <div class="booking-details-container">
+        <img src="/{{ property_data[2] }}" alt="{{ property_data[0] }}" class="property-image">
+
+        <!-- Additional Images Container -->
+        <div class="additional-images-container">
+            <div class="additional-image">
+                <img src="/{{ property_data[5] }}" alt="{{ property_data[0] }}">
+            </div>
+            <div class="additional-image">
+                <img src="/{{ property_data[6] }}" alt="{{ property_data[0] }}">
+            </div>
+            <div class="additional-image">
+                <img src="/{{ property_data[7] }}" alt="{{ property_data[0] }}">
+            </div>
+            <div class="additional-image">
+                <img src="/{{ property_data[8] }}" alt="{{ property_data[0] }}">
+            </div>
+        </div>
+        </div>
+        <div class="container">
+        <div class="booking-details-container1">
+            <h2>Property: <p>{{ property_data[1] }}</p></h2>
+            <h2>Description: <p>{{ property_data[3] }}</p></h2><br>
+            <h2>Amenities: <p>{{ property_data[10] }}</p></h2>
+        </div>
+
+        <div class="booking-details-container2">
+            <h2>Booking Form</h2>
+            <form action="/submit_booking" method="post">
+                <label for="property_name">Property Name</label>
+                <input type="text" id="property_name" name="property_name" value="{{ property_data[1] }}" readonly>
+
+                <label for="guest_name">Your Name</label>
+                <input type="text" id="guest_name" name="guest_name" required>
+
+                <label for="check_in">Check-In</label>
+                <input type="text" id="check_in" name="check_in" readonly>
+                <button type="button" onclick="openCalendar('check_in')">Select Date</button>
+
+                <label for="check_out">Check-Out</label>
+                <input type="text" id="check_out" name="check_out" readonly>
+                <button type="button" onclick="openCalendar('check_out')">Select Date</button>
+
+                <label for="guests">Number of Guests</label>
+                <input type="number" id="guests" name="guests" required>
+
+                <!-- Add more booking fields as needed -->
+
+                <!-- Price Section -->
+                <div id="price-section">
+                    <h2>Price: <span id="calculated-price">{{ property_data[9] }}</span></h2>
+                </div>
+
+                <button type="submit">Submit Booking</button>
+
+                            </form>
+        </div>
+
+        <!-- JavaScript for Date Picker and Price Calculation -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Initialize Pikaday for date inputs
+                openCalendar('check_in');
+                openCalendar('check_out');
+
+                // Calculate price on input change
+                const checkInInput = document.getElementById('check_in');
+                const checkOutInput = document.getElementById('check_out');
+                const calculatedPrice = document.getElementById('calculated-price');
+
+                [checkInInput, checkOutInput].forEach(input => {
+                    input.addEventListener('change', calculatePrice);
+                });
+
+                function calculatePrice() {
+                    // Implement your price calculation logic based on the total number of days
+                    const propertyPrice = parseFloat('{{ property_data[9] }}'); // Get property price from the template
+                    const checkInDate = new Date(document.getElementById('check_in').value);
+                    const checkOutDate = new Date(document.getElementById('check_out').value);
+
+                    // Calculate the total number of days
+                    const totalDays = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
+
+                    // Example calculation: $100 per day
+                    const totalCost = totalDays * propertyPrice;
+
+                    // Update the displayed price
+                    calculatedPrice.textContent = totalCost.toFixed(2);
+                }
+            });
+
+            function openCalendar(inputId) {
+                // Implement logic to open a calendar and set the selected date to the corresponding input field
+                // For Pikaday, use the provided code for opening the calendar
+                const inputElement = document.getElementById(inputId);
+                const picker = new Pikaday({
+                    field: inputElement,
+                    format: 'MM/DD/YYYY', // Adjust the date format as needed
+                    // Add more Pikaday configurations if necessary
+                });
+                picker.show();
+            }
+        </script>
+
+
+
+
+
+
+        </div>
+</body>
+</html>

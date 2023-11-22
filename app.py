@@ -23,7 +23,13 @@ try:
                 name TEXT NOT NULL,
                 image BLOB NOT NULL,
                 description TEXT NOT NULL,
-                thumbnail BLOB NOT NULL
+                thumbnail BLOB NOT NULL,
+                interiorimg1 BLOB NOT NULL,
+                interiorimg2 BLOB NOT NULL,
+                interiorimg3 BLOB NOT NULL,
+                interiorimg4 BLOB NOT NULL,
+                Price INTEGER NOT NULL,
+                Amenities TEXT NOT NULL
             )
         ''')
         cursor.execute('''
@@ -133,40 +139,95 @@ def property_listing():
     if request.method == 'POST':
         property_name = request.form.get('property_name')
         property_description = request.form.get('property_description')
+        Price = request.form.get('Price')
+        amenities = request.form.getlist('amenities[]')
 
         # Check if the POST request has the file part
         if 'property_image' in request.files and 'thumbnail_image' in request.files:
             property_image = request.files['property_image']
             thumbnail_image = request.files['thumbnail_image']
+            interior1 = request.files['Additional Image1']
+            interior2 = request.files['Additional Image2']
+            interior3 = request.files['Additional Image3']
+            interior4 = request.files['Additional Image4']
 
             # Save the images to a folder within the 'static' directory
-            property_image_path = os.path.join('static','uploads', property_image.filename)
-            thumbnail_image_path = os.path.join('static','uploads', thumbnail_image.filename)
+            property_image_path = os.path.join('static', 'uploads', property_image.filename)
+            thumbnail_image_path = os.path.join('static', 'uploads', thumbnail_image.filename)
+            ipath1 = os.path.join('static', 'uploads', interior1.filename)
+            ipath2 = os.path.join('static', 'uploads', interior2.filename)
+            ipath3 = os.path.join('static', 'uploads', interior3.filename)
+            ipath4 = os.path.join('static', 'uploads', interior4.filename)
 
             # Replace backslashes with forward slashes
             property_image_path = property_image_path.replace('\\', '/')
             thumbnail_image_path = thumbnail_image_path.replace('\\', '/')
+            ipath1 = ipath1.replace('\\', '/')
+            ipath2 = ipath2.replace('\\', '/')
+            ipath3 = ipath3.replace('\\', '/')
+            ipath4 = ipath4.replace('\\', '/')
 
+            # Save the file objects
             property_image.save(property_image_path)
             thumbnail_image.save(thumbnail_image_path)
+            interior1.save(ipath1)
+            interior2.save(ipath2)
+            interior3.save(ipath3)
+            interior4.save(ipath4)
 
-            try:
-                # Insert the property into the properties table
-                with sqlite3.connect('users.db') as connection:
-                    cursor = connection.cursor()
-                    cursor.execute("INSERT INTO properties (name, image, description, thumbnail) VALUES (?, ?, ?, ?)",
-                                   (property_name, property_image_path, property_description, thumbnail_image_path))
-                    connection.commit()
+        amenities_str = ', '.join(amenities)
 
-                # Redirect to a success page or do other necessary actions
-                return render_template('property_listing_success.html', property_name=property_name)
+        try:
+            # Insert the property into the properties table
+            with sqlite3.connect('users.db') as connection:
+                cursor = connection.cursor()
+                cursor.execute(
+                    "INSERT INTO properties (name, image, description, thumbnail,interiorimg1,interiorimg2,interiorimg3,interiorimg4,Price, Amenities) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    (property_name, property_image_path, property_description, thumbnail_image_path, ipath1,
+                     ipath2, ipath3, ipath4, Price, amenities_str))
+                connection.commit()
 
-            except Exception as e:
-                # Handle exceptions (e.g., database errors)
-                return render_template('property_listing.html', error=str(e))
+            # Redirect to a success page or do other necessary actions
+            return render_template('property_listing_success.html', property_name=property_name)
+
+        except Exception as e:
+            # Handle exceptions (e.g., database errors)
+            return render_template('property_listing.html', error=str(e))
 
     # If it's a GET request, simply render the property_listing.html template
     return render_template('property_listing.html')
+
+@app.route('/booking/', defaults={'property_id': None})
+@app.route('/booking/<int:property_id>')
+def booking(property_id):
+    try:
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+
+            if property_id is None:
+                # Fetch the first available property id if no ID is provided
+                cursor.execute("SELECT id FROM properties ORDER BY RANDOM() LIMIT 1")
+                property_id = cursor.fetchone()[0]
+
+            # Fetch the property with the provided ID
+            cursor.execute("SELECT * FROM properties WHERE id=?", (property_id,))
+            property_data = cursor.fetchone()
+
+        if property_data:
+            # Property information found, pass it to the booking_details.html template
+            return render_template('booking_details.html', property_data=property_data)
+        else:
+            # Property not found, you may want to handle this case
+            return render_template('error.html', error='Property not found')
+
+    except Exception as e:
+        print(f"Error fetching property information: {e}")
+        return render_template('error.html', error=str(e))
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
