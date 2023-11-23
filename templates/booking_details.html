@@ -168,6 +168,43 @@ p {
         }
 
         /* Add more styles as needed */
+        /* The Modal (background) */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+}
+
+/* Modal Content */
+.modal-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+}
+
+/* Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
     </style>
 </head>
 <body>
@@ -225,10 +262,7 @@ p {
                     <h2>Price: <span id="calculated-price">{{ property_data[9] }}</span></h2>
                 </div>
 
-                <form action="/submit_booking" method="post">
-                    <button type="submit">Submit Booking</button>
-                </form>
-
+                <button type="button" onclick="showPopupForm()">Submit Booking</button>
                             </form>
         </div>
 
@@ -284,5 +318,78 @@ p {
 
 
         </div>
+
+        <!-- The Modal -->
+<div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close" onclick="closePopupForm()">&times;</span>
+        <!-- Your popup form content -->
+        <h2>Popup Form</h2>
+        <form id="paymentForm">
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email-address" required />
+            </div>
+            <div class="form-group">
+              <label for="amount">Amount</label>
+              <input type="tel" id="amount" required />
+            </div>
+            <div class="form-group">
+              <label for="first-name">First Name</label>
+              <input type="text" id="first-name" />
+            </div>
+            <div class="form-group">
+              <label for="last-name">Last Name</label>
+              <input type="text" id="last-name" />
+            </div>
+            <div class="form-submit">
+              <button type="submit" onclick="payWithPaystack()"> Pay </button>
+            </div>
+          </form>
+
+          <script src="https://js.paystack.co/v1/inline.js"></script>
+    </div>
+</div>
+    <script>
+    // Function to show the popup form
+    function showPopupForm() {
+        var modal = document.getElementById('myModal');
+        modal.style.display = 'block';
+    }
+
+    // Function to close the popup form
+    function closePopupForm() {
+        var modal = document.getElementById('myModal');
+        modal.style.display = 'none';
+    }
+    </script>
+
+
+
+    <script>
+    var paymentForm = document.getElementById('paymentForm');
+    paymentForm.addEventListener('submit', payWithPaystack, false);
+    function payWithPaystack() {
+    var handler = PaystackPop.setup({
+        key: 'pk_test_3ddd7ef95880dbd4550ee89295aa357b90b15f52', // Replace with your public key
+        email: document.getElementById('email-address').value,
+        amount: document.getElementById('amount').value * 100, // the amount value is multiplied by 100 to convert to the lowest currency unit
+        currency: 'USD', // Use GHS for Ghana Cedis or USD for US Dollars
+        ref: 'BN001', // Replace with a reference you generated
+        callback: function(response) {
+        //this happens after the payment is completed successfully
+        var reference = response.reference;
+        alert('Payment complete! Reference: ' + reference);
+        // Make an AJAX call to your server with the reference to verify the transaction
+        },
+        onClose: function() {
+        alert('Transaction was not completed, window closed.');
+        },
+        });
+        handler.openIframe();
+        }
+    </script>
+
 </body>
 </html>
