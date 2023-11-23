@@ -372,28 +372,62 @@ p {
         paymentForm.addEventListener("submit", payWithPaystack, false);
 
         function payWithPaystack(e) {
-        e.preventDefault();
+    e.preventDefault();
 
-        let handler = PaystackPop.setup({
-            key: 'pk_test_079a5e10a5252fda7d9a174d249581b3be77ea47', // Replace with your public key
-            email: document.getElementById("email-address").value,
-            amount: document.getElementById("amount").value * 100,
-            currency:'KES',
-            ref: ''+Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
-            // label: "Optional string that replaces customer email"
-            onClose: function(){
+    let handler = PaystackPop.setup({
+        key: 'pk_test_079a5e10a5252fda7d9a174d249581b3be77ea47', // Replace with your public key
+        email: document.getElementById("email-address").value,
+        amount: document.getElementById("amount").value * 100,
+        currency:'KES',
+        ref: ''+Math.floor((Math.random() * 1000000000) + 1),
+        onClose: function(){
             alert('Window closed.');
-            },
-            callback: function(response){
-            let message = 'Payment complete! Reference: ' + response.reference;
-            alert(message);
+        },
+        callback: function(response){
+            if (response.status === 'success') {
+                // Payment successful, submit booking details
+                submitBookingDetails();
+            } else {
+                // Payment failed, show an alert or take appropriate action
+                alert('Payment failed: ' + response.message);
             }
-        });
-
-        handler.openIframe();
         }
+    });
+
+    handler.openIframe();
+}
+
+function submitBookingDetails() {
+    // Use AJAX to send the booking details to your server
+    var xhr = new XMLHttpRequest();
+    var url = '/submit_booking'; // Update with your actual endpoint
+    var params = 'property_name=' + encodeURIComponent(document.getElementById('property_name').value)
+                + '&guest_name=' + encodeURIComponent(document.getElementById('guest_name').value)
+                + '&check_in=' + encodeURIComponent(document.getElementById('check_in').value)
+                + '&check_out=' + encodeURIComponent(document.getElementById('check_out').value)
+                + '&guests=' + encodeURIComponent(document.getElementById('guests').value)
+                + '&amount=' + encodeURIComponent(document.getElementById('amount').value);
+
+    xhr.open('POST', url, true);
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            // Handle the response from the server
+            var response = JSON.parse(xhr.responseText);
+            if (response.status === 'success') {
+                alert('Booking submitted successfully!!!We have emailed you your receipt');
+            } else {
+                alert('Booking submission failed: ' + response.message);
+            }
+        }
+    };
+
+    xhr.send(params);
+}
 
     </script>
+
 <script>
     // Function to update the "amount" input field based on the calculated price
     function updateAmount() {

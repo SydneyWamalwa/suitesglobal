@@ -9,6 +9,7 @@ try:
     # Create the users table if it doesn't exist
     with sqlite3.connect('users.db') as connection:
         cursor = connection.cursor()
+        app.logger.debug('Executing SQL statements...')
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,13 +36,17 @@ try:
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS bookings (
             id INTEGER PRIMARY KEY,
+            guest_name TEXT NOT NULL,
             property_id INTEGER,
+            property_name TEXT NOT NULL,
             check_in DATE NOT NULL,
             check_out DATE NOT NULL,
             guests INTEGER NOT NULL,
+            amount VARCHAR NOT NULL,
             FOREIGN KEY (property_id) REFERENCES properties (id)
         )
     ''')
+        app.logger.debug('Committing changes to the database...')
         connection.commit()
 except Exception as e:
     print(f"Error connecting to the database: {e}")
@@ -223,6 +228,45 @@ def booking(property_id):
     except Exception as e:
         print(f"Error fetching property information: {e}")
         return render_template('error.html', error=str(e))
+
+@app.route('/submit_booking', methods=['POST'])
+def submit_booking():
+    # Extract data from the request
+    property_name = request.form.get('property_name')
+    guest_name = request.form.get('guest_name')
+    check_in = request.form.get('check_in')
+    check_out = request.form.get('check_out')
+    guests = request.form.get('guests')
+    amount = request.form.get('amount')
+
+    try:
+        # Connect to the database
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+
+            # Get the property ID based on the property name
+            cursor.execute("SELECT id FROM properties WHERE name=?", (property_name,))
+            property_id = cursor.fetchone()
+
+            if property_id:
+                # Insert booking information into the bookings table
+                cursor.execute("""
+                    INSERT INTO bookings (property_id, property_name, check_in, check_out, guests, guest_name, amount)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                """, (property_id[0], property_name, check_in, check_out, guests, guest_name, amount))
+
+                # Commit the changes to the database
+                connection.commit()
+
+                # Respond with a success message
+                return jsonify({'status': 'success', 'message': 'Booking submitted successfully'})
+            else:
+                return jsonify({'status': 'error', 'message': 'Property not found'})
+
+    except Exception as e:
+        # Handle database errors
+        return jsonify({'status': 'error', 'message': str(e)})
+
 
 
 
