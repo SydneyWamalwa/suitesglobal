@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session,jsonify
 import sqlite3
 import os
+import requests
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Change this to a secure secret key
@@ -223,6 +224,9 @@ def booking(property_id):
     except Exception as e:
         print(f"Error fetching property information: {e}")
         return render_template('error.html', error=str(e))
+
+
+
 
 
 if __name__ == '__main__':
