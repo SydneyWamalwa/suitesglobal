@@ -206,6 +206,12 @@ p {
 }
 
     </style>
+    <!-- Include SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- Include SweetAlert2 JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 <body>
 
@@ -354,6 +360,14 @@ p {
     </div>
 </div>
     <script>
+        function showSuccessAlert() {
+        Swal.fire({
+            icon: 'success',
+            title: 'Booking submitted successfully!',
+            text: 'We have emailed you your receipt.',
+            confirmButtonColor: '#4caf50', // Customize the confirm button color
+        });
+    }
     // Function to show the popup form
     function showPopupForm() {
         var modal = document.getElementById('myModal');
@@ -416,9 +430,14 @@ function submitBookingDetails() {
             // Handle the response from the server
             var response = JSON.parse(xhr.responseText);
             if (response.status === 'success') {
-                alert('Booking submitted successfully!!!We have emailed you your receipt');
+                showSuccessAlert();
             } else {
-                alert('Booking submission failed: ' + response.message);
+                Swal.fire({
+                        icon: 'error',
+                        title: 'Booking submission failed',
+                        text: response.message,
+                        confirmButtonColor: '#d33', // Customize the confirm button color
+                    });
             }
         }
     };
