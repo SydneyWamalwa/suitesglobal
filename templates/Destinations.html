@@ -62,12 +62,12 @@
 <body>
 
     <div class="image-grid">
-        {% for destination_data in destinations_data %}
+        {% for destinations_data in destinations_data %}
             <div class="image-item">
-                <img src="/{{ destination_data[2] }}" alt="{{ destination_data[1] }}">
+                <img src="/{{ destinations_data[1] }}" alt="{{ destinations_data[0] }}">
                 <div class="image-caption-container">
-                    <div class="image-caption">{{ destination_data[1] }}</div>
-                    <div><a href="/booking/" class="book-button">Book</a></div>
+                    <div class="image-caption">{{ destinations_data[0] }}</div>
+                    <div><a href="/booking_destination/" class="book-button">Book</a></div>
                 </div>
             </div>
         {% endfor %}

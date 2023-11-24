@@ -72,9 +72,9 @@ try:
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS destination_bookings (
             id INTEGER PRIMARY KEY,
+            destination_name TEXT NOT NULL,
             guest_name TEXT NOT NULL,
             destination_id INTEGER,
-            destination_name TEXT NOT NULL,
             check_in DATE NOT NULL,
             check_out DATE NOT NULL,
             guests INTEGER NOT NULL,
@@ -382,6 +382,70 @@ def destinations_listing():
     # If it's a GET request, simply render the property_listing.html template
     return render_template('destinations_listing.html')
 
+@app.route('/booking_destination/', defaults={'destination_id': None})
+@app.route('/booking_destination/<int:destination_id>')
+def destination_booking(destination_id):
+    try:
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+
+            if destination_id is None:
+                # Fetch the first available property id if no ID is provided
+                cursor.execute("SELECT id FROM destinations ORDER BY RANDOM() LIMIT 1")
+                destination_id = cursor.fetchone()[0]
+
+            # Fetch the property with the provided ID
+            cursor.execute("SELECT * FROM destinations WHERE id=?", (destination_id,))
+            destinations_data = cursor.fetchone()
+
+        if destinations_data:
+            # Property information found, pass it to the booking_details.html template
+            return render_template('destination_booking.html', destinations_data=destinations_data)
+        else:
+            # Property not found, you may want to handle this case
+            return render_template('error.html', error='destination not found')
+
+    except Exception as e:
+        print(f"Error fetching destination information: {e}")
+        return render_template('error.html', error=str(e))
+
+@app.route('/submit_destination_booking', methods=['POST'])
+def submit_destination_booking():
+    # Extract data from the request
+    destination_name = request.form.get('destination_name')
+    guest_name = request.form.get('guest_name')
+    check_in = request.form.get('check_in')
+    check_out = request.form.get('check_out')
+    guests = request.form.get('guests')
+    amount = request.form.get('amount')
+
+    try:
+        # Connect to the database
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+
+            # Get the destination ID based on the destination name
+            cursor.execute("SELECT id FROM destinations WHERE destination_name=?", (destination_name,))
+            destination_id = cursor.fetchone()
+
+            if destination_id:
+                # Insert booking information into the bookings table
+                cursor.execute("""
+                    INSERT INTO destination_bookings (destination_id, destination_name, check_in, check_out, guests, guest_name, amount)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                """, (destination_id[0], destination_name, check_in, check_out, guests, guest_name, amount))
+
+                # Commit the changes to the database
+                connection.commit()
+
+                # Respond with a success message
+                return jsonify({'status': 'success', 'message': 'Booking submitted successfully'})
+            else:
+                return jsonify({'status': 'error', 'message': 'Property not found'})
+
+    except Exception as e:
+        # Handle database errors
+        return jsonify({'status': 'error', 'message': str(e)})
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000)
