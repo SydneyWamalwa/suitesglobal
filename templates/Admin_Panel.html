@@ -56,7 +56,7 @@
 
         <button type="button" onclick="validateLogin()">Login</button>
     </form>
-    <div class="admin-text"><a href="/Admin_Panel">Are you admin?</a></div>
+    <div class="admin-text"><a href="/adminsignup">Don't have an account?Signup admin.</a></div>
 
     <script>
         function validateLogin() {
@@ -70,12 +70,12 @@
             } else {
                 // Send AJAX request to the server
                 $.ajax({
-                    url: '/Login',
+                    url: '/Admin_Panel',
                     type: 'POST',
                     data: { name: name, email: email, password: password },
                     success: function(response) {
                         // Redirect to the home page upon successful login
-                        window.location.href = '/';
+                        window.location.href = '/dashboard';
                     },
                     error: function(error) {
                         // Display an alert for login failure

@@ -446,6 +446,61 @@ def submit_destination_booking():
     except Exception as e:
         # Handle database errors
         return jsonify({'status': 'error', 'message': str(e)})
+#Admin Routes
+@app.route('/Admin_Panel',methods=['GET','POST'])
+def Admin_Panel():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT * FROM admins WHERE email=? AND password=?", (email, password))
+            admin = cursor.fetchone()
+
+        if admin:
+            # If the user exists, store user information in the session
+            session['user_id'] = admin[0]
+            session['user_name'] = admin[1]
+
+            # Redirect to the index page with a welcome message
+            return redirect('/dashboard')
+
+        else:
+            return render_template('Admin_Panel.html', error="Invalid Credentials")
+    return render_template('Admin_Panel.html')
+
+@app.route('/adminsignup', methods=['GET', 'POST'])
+def adminsignup():
+    if request.method == 'POST':
+        # Process the form data here (save to database, perform validation, etc.)
+        name = request.form.get('name')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        try:
+            # Insert the user into the users table
+            with sqlite3.connect('users.db') as connection:
+                cursor = connection.cursor()
+                cursor.execute("INSERT INTO admins (name, email, password) VALUES (?, ?, ?)", (name, email, password))
+                connection.commit()
+
+            # Store the user's name in the session
+            session['name'] = name
+            session['email']= email
+            session['password']= password
+
+            # Redirect to the index page with the user's name as a parameter
+            return redirect('/dashboard')
+
+        except sqlite3.IntegrityError:
+            # Handle the case where the email is not unique (already exists in the database)
+            return render_template('Admin_Signup.html', error='Email already exists. Please use a different email.')
+    return render_template('Admin_Signup.html')
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000)

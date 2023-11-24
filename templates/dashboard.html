@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <title>Suites Global</title>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <a href="#Home">
+        <img src="/static/images/B&N International Ltd.png" alt="Suites Global Logo">
+    </a>
+    <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#what-we-do">Why List with us</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+        <li><a href="/list_property">List Property</a></li>
+        <li><a href="/list_destination">List Destination</a></li>
+    </ul>
+</nav>
+<section>
+  <div class="welcome">
+<p>Welcome, {{ user_name }}</p>
+</div>
+</section>
+
+  <!-- Header Section -->
+  <header class="header" id="Home">
+    <img src="/static/images/housing.jpg" alt="Suits Global Header Image">
+    <div class="header-content">
+      <h1>Welcome to B&N International Ltd.</h1>
+      <p>Your Destination for Premium Corporate Housing,Destination Marketing and E-commerce</p>
+    </div>
+  </header>
+
+  <section id="commitment" class="our-commitment">
+    <div class="container1">
+      <h2>Our commitment is to make your stays memorable</h2>
+      <div class="commitment-icons">
+        <div class="icon">
+          <img src="/static/images/star.png" alt="" width="100" height="100">
+          <p>Quality Stays</p>
+        </div>
+        <div class="icon">
+          <img src="/static/images/apartment.png" alt="" width="100" height="100">
+          <p>100+ Apartments</p>
+        </div>
+        <div class="icon">
+          <img src="/static/images/double-bed.png" alt="" width="100" height="100">
+          <p>Cozy Stays</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Introduction Section -->
+  <!-- About Us Section -->
+  <section id="about" class="about-section">
+    <div class="container">
+        <h2>About Us</h2>
+        <p>
+          B&N International Ltd is a distinguished international investment company with diverse interests spanning across destination marketing, corporate housing, and e-commerce. With a commitment to excellence, we strive to make a positive impact in the global business landscape.
+      </p>
+      <p>
+          Our core areas of expertise include destination marketing, where we leverage innovative strategies to promote and showcase unique destinations. Additionally, our involvement in corporate housing ensures top-notch accommodation solutions for businesses, offering comfort and convenience to professionals on the move.
+      </p>
+      <p>
+          In the realm of e-commerce, B&N International Ltd pioneers cutting-edge solutions to meet the evolving needs of the digital marketplace. Our dedication to quality and innovation positions us as a leader in the international business arena.
+      </p>
+      <p>
+          At B&N International Ltd, we are driven by a vision of global success and sustainability. Our unwavering commitment to integrity, professionalism, and customer satisfaction sets us apart, making us a trusted partner for businesses seeking excellence in international investments.
+      </p>        <div class="image-text-container">
+            <div class="image-text">
+                <img src="/static/images/hse.jpeg" alt="About Us Image" width="100" height="100">
+                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit...</p>
+            </div>
+            <div class="image-text">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
+                <img src="/static/images/apart.jpeg" alt="About Us Image">
+            </div>
+            <div class="image-text">
+                <img src="/static/images/city.jpg" alt="About Us Image">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Destinations Section-->
+
+<section id="Destination" class="Destination">
+  <div class="container">
+      <div class="header-container">
+          <h2>Destinations</h2>
+          <button type="button" id="button" onclick="window.location.href='/Destinations';">View Featured Destinations</button>
+      </div>
+      <div class="image-container">
+          <figure>
+              <img src="/static/images/Mombasa.jpeg" alt="Mombasa Image">
+              <figcaption>Mombasa</figcaption>
+          </figure>
+          <figure>
+              <img src="/static/images/Lisbon.webp" alt="Lisbon Image">
+              <figcaption>Lisbon</figcaption>
+          </figure>
+          <figure>
+              <img src="/static/images/CapeTown.jpeg" alt="CapeTown Image">
+              <figcaption>Cape Town</figcaption>
+          </figure>
+      </div>
+  </div>
+</section>
+
+
+  <!-- What We Do Section -->
+  <section id="what-we-do" class="what-we-do-section">
+    <div class="container">
+      <div class="header-container">
+        <h2>Featured Properties</h2>
+        <button type="button" id="button" onclick="window.location.href='/properties';">View Properties</button>
+      </div>
+      <div class="image-container">
+        <img src="/static/images/prop3.webp" alt="What We Do Image" width="300" height="300">
+        <img src="/static/images/prop1.jpeg" alt="What We Do Image" width="300" height="300">
+        <img src="/static/images/prop2.jpg" alt="What We Do Image" width="300" height="300">
+      </div>
+    </div>
+</section>
+
+
+
+  <!-- Feedback Section -->
+  <section class="feedback-section">
+    <div class="container">
+      <h2>Customer Feedback</h2>
+      <div class="testimonial-boxes">
+        <div class="testimonial-box box1">
+          <p>Testimonial 1 goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        </div>
+        <div class="testimonial-box box2">
+          <p>Testimonial 2 goes here. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+        <div class="testimonial-box box3">
+          <p>Testimonial 3 goes here. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact-section">
+    <div class="container">
+      <h2>Contact Us</h2>
+      <p>Have questions or need assistance? Reach out to our dedicated team for personalized support.</p>
+      <form action="submit-form.php" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" rows="4" required></textarea>
+
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </section>
+  <!-- Footer Section -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2023 Suits Global. All rights reserved.</p>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#what-we-do">What We Do</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+      </ul>
+    </div>
+  </footer>
+
+</body>
+</html>
