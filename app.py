@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session,jsonify
+from flask import Flask, render_template, request, redirect, session,jsonify,url_for
 import sqlite3
 import os
 
@@ -26,6 +26,7 @@ try:
                 password TEXT NOT NULL
             )
         ''')
+
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS properties (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -38,7 +39,9 @@ try:
                 interiorimg3 BLOB NOT NULL,
                 interiorimg4 BLOB NOT NULL,
                 Price INTEGER NOT NULL,
-                Amenities TEXT NOT NULL
+                Amenities TEXT NOT NULL,
+                admin_id INTEGER NOT NULL,
+                FOREIGN KEY (admin_id) REFERENCES admins (id)
             )
         ''')
         cursor.execute('''
@@ -66,20 +69,23 @@ try:
             img3 BLOB NOT NULL,
             img4 BLOB NOT NULL,
             Price INTEGER NOT NULL,
-            Amenities TEXT NOT NULL
+            Amenities TEXT NOT NULL,
+            admin_id INTEGER NOT NULL,
+            FOREIGN KEY (admin_id) REFERENCES admins (id)
         )
     ''')
+
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS destination_bookings (
             id INTEGER PRIMARY KEY,
             destination_name TEXT NOT NULL,
             guest_name TEXT NOT NULL,
-            destination_id INTEGER,
+            destination_booking_id INTEGER NOT NULL,
             check_in DATE NOT NULL,
             check_out DATE NOT NULL,
             guests INTEGER NOT NULL,
             amount VARCHAR NOT NULL,
-            FOREIGN KEY (destination_id) REFERENCES properties (id)
+            FOREIGN KEY (destination_booking_id) REFERENCES destinations (id)
         )
     ''')
         app.logger.debug('Committing changes to the database...')
@@ -182,6 +188,7 @@ def property_listing():
         property_description = request.form.get('property_description')
         Price = request.form.get('Price')
         amenities = request.form.getlist('amenities[]')
+        admin_id = session['admin_id']  # Assuming you have admin_id stored in session
 
         # Check if the POST request has the file part
         if 'property_image' in request.files and 'thumbnail_image' in request.files:
@@ -223,9 +230,9 @@ def property_listing():
             with sqlite3.connect('users.db') as connection:
                 cursor = connection.cursor()
                 cursor.execute(
-                    "INSERT INTO properties (name, image, description, thumbnail,interiorimg1,interiorimg2,interiorimg3,interiorimg4,Price, Amenities) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    "INSERT INTO properties (name, image, description, thumbnail,interiorimg1,interiorimg2,interiorimg3,interiorimg4,Price, Amenities, admin_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     (property_name, property_image_path, property_description, thumbnail_image_path, ipath1,
-                     ipath2, ipath3, ipath4, Price, amenities_str))
+                     ipath2, ipath3, ipath4, Price, amenities_str, admin_id))
                 connection.commit()
 
             # Redirect to a success page or do other necessary actions
@@ -237,6 +244,7 @@ def property_listing():
 
     # If it's a GET request, simply render the property_listing.html template
     return render_template('property_listing.html')
+
 
 @app.route('/booking/', defaults={'property_id': None})
 @app.route('/booking/<int:property_id>')
@@ -267,6 +275,8 @@ def booking(property_id):
 
 @app.route('/submit_booking', methods=['POST'])
 def submit_booking():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
     # Extract data from the request
     property_name = request.form.get('property_name')
     guest_name = request.form.get('guest_name')
@@ -321,11 +331,15 @@ def destinations():
 
 @app.route('/list_destination', methods=['GET', 'POST'])
 def destinations_listing():
+    if 'admin_id' not in session:
+        return redirect(url_for('login'))
+
     if request.method == 'POST':
         destination_name = request.form.get('destination_name')
         destination_description = request.form.get('destination_description')
         Price = request.form.get('Price')
         amenities = request.form.getlist('amenities[]')
+        admin_id = session['admin_id']
 
         # Check if the POST request has the file part
         if 'destination_image' in request.files and 'thumbnail_image' in request.files:
@@ -363,13 +377,13 @@ def destinations_listing():
         amenities_str = ', '.join(amenities)
 
         try:
-            # Insert the destination into the properties table
+            # Insert the destination into the destinations table
             with sqlite3.connect('users.db') as connection:
                 cursor = connection.cursor()
                 cursor.execute(
-                    "INSERT INTO destinations (destination_name,destination_image,description, thumbnail,img1,img2,img3,img4,Price, Amenities) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)",
+                    "INSERT INTO destinations (destination_name, destination_image, description, thumbnail, img1, img2, img3, img4, Price, Amenities, admin_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     (destination_name, destination_image_path, destination_description, thumbnail_image_path, ipath1,
-                     ipath2, ipath3, ipath4, Price, amenities_str))
+                     ipath2, ipath3, ipath4, Price, amenities_str, admin_id))
                 connection.commit()
 
             # Redirect to a success page or do other necessary actions
@@ -379,8 +393,9 @@ def destinations_listing():
             # Handle exceptions (e.g., database errors)
             return render_template('destinations_listing.html', error=str(e))
 
-    # If it's a GET request, simply render the property_listing.html template
+    # If it's a GET request, simply render the destinations_listing.html template
     return render_template('destinations_listing.html')
+
 
 @app.route('/booking_destination/', defaults={'destination_id': None})
 @app.route('/booking_destination/<int:destination_id>')
@@ -411,6 +426,8 @@ def destination_booking(destination_id):
 
 @app.route('/submit_destination_booking', methods=['POST'])
 def submit_destination_booking():
+    if 'admin_id' not in session:
+        return redirect(url_for('login'))
     # Extract data from the request
     destination_name = request.form.get('destination_name')
     guest_name = request.form.get('guest_name')
@@ -431,7 +448,7 @@ def submit_destination_booking():
             if destination_id:
                 # Insert booking information into the bookings table
                 cursor.execute("""
-                    INSERT INTO destination_bookings (destination_id, destination_name, check_in, check_out, guests, guest_name, amount)
+                    INSERT INTO destination_bookings (destination_booking_id, destination_name, check_in, check_out, guests, guest_name, amount)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
                 """, (destination_id[0], destination_name, check_in, check_out, guests, guest_name, amount))
 
@@ -460,8 +477,8 @@ def Admin_Panel():
 
         if admin:
             # If the user exists, store user information in the session
-            session['user_id'] = admin[0]
-            session['user_name'] = admin[1]
+            session['admin_id'] = admin[0]
+            session['admin_name'] = admin[1]
 
             # Redirect to the index page with a welcome message
             return redirect('/dashboard')
@@ -479,23 +496,29 @@ def adminsignup():
         password = request.form.get('password')
 
         try:
-            # Insert the user into the users table
+            # Insert the new admin into the admins table
             with sqlite3.connect('users.db') as connection:
                 cursor = connection.cursor()
                 cursor.execute("INSERT INTO admins (name, email, password) VALUES (?, ?, ?)", (name, email, password))
                 connection.commit()
 
-            # Store the user's name in the session
-            session['name'] = name
-            session['email']= email
-            session['password']= password
+            # Retrieve the admin_id of the newly inserted admin
+            cursor.execute("SELECT id FROM admins WHERE email=?", (email,))
+            new_admin_id = cursor.fetchone()[0]
 
-            # Redirect to the index page with the user's name as a parameter
+            # Store the admin_id in the session
+            session['admin_id'] = new_admin_id
+            session['name'] = name
+            session['email'] = email
+            session['password'] = password
+
+            # Redirect to the dashboard or another page
             return redirect('/dashboard')
 
         except sqlite3.IntegrityError:
             # Handle the case where the email is not unique (already exists in the database)
             return render_template('Admin_Signup.html', error='Email already exists. Please use a different email.')
+
     return render_template('Admin_Signup.html')
 @app.route('/dashboard')
 def dashboard():
