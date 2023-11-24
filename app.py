@@ -19,6 +19,14 @@ try:
             )
         ''')
         cursor.execute('''
+            CREATE TABLE IF NOT EXISTS admins (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                email TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL
+            )
+        ''')
+        cursor.execute('''
             CREATE TABLE IF NOT EXISTS properties (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
@@ -44,6 +52,34 @@ try:
             guests INTEGER NOT NULL,
             amount VARCHAR NOT NULL,
             FOREIGN KEY (property_id) REFERENCES properties (id)
+        )
+    ''')
+        cursor.execute('''
+        CREATE TABLE IF NOT EXISTS destinations (
+            id INTEGER PRIMARY KEY,
+            destination_name TEXT NOT NULL,
+            destination_image BLOB NOT NULL,
+            description TEXT NOT NULL,
+            thumbnail BLOB NOT NULL,
+            img1 BLOB NOT NULL,
+            img2 BLOB NOT NULL,
+            img3 BLOB NOT NULL,
+            img4 BLOB NOT NULL,
+            Price INTEGER NOT NULL,
+            Amenities TEXT NOT NULL
+        )
+    ''')
+        cursor.execute('''
+        CREATE TABLE IF NOT EXISTS destination_bookings (
+            id INTEGER PRIMARY KEY,
+            guest_name TEXT NOT NULL,
+            destination_id INTEGER,
+            destination_name TEXT NOT NULL,
+            check_in DATE NOT NULL,
+            check_out DATE NOT NULL,
+            guests INTEGER NOT NULL,
+            amount VARCHAR NOT NULL,
+            FOREIGN KEY (destination_id) REFERENCES properties (id)
         )
     ''')
         app.logger.debug('Committing changes to the database...')
@@ -267,9 +303,84 @@ def submit_booking():
         # Handle database errors
         return jsonify({'status': 'error', 'message': str(e)})
 
+#Destinations Code
+@app.route('/Destinations')
+def destinations():
+    try:
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT destination_name, thumbnail FROM destinations")
+            destinations_data = cursor.fetchall()
 
+        return render_template('Destinations.html', destinations_data=destinations_data)
 
+    except Exception as e:
+        print(f"Error fetching properties: {e}")
+        destinations_data = []
+        return render_template('Destinations.html', destinations_data=destinations_data, error=str(e))
 
+@app.route('/list_destination', methods=['GET', 'POST'])
+def destinations_listing():
+    if request.method == 'POST':
+        destination_name = request.form.get('destination_name')
+        destination_description = request.form.get('destination_description')
+        Price = request.form.get('Price')
+        amenities = request.form.getlist('amenities[]')
+
+        # Check if the POST request has the file part
+        if 'destination_image' in request.files and 'thumbnail_image' in request.files:
+            destination_image = request.files['destination_image']
+            thumbnail_image = request.files['thumbnail_image']
+            destination1 = request.files['Additional Image1']
+            destination2 = request.files['Additional Image2']
+            destination3 = request.files['Additional Image3']
+            destination4 = request.files['Additional Image4']
+
+            # Save the images to a folder within the 'static' directory
+            destination_image_path = os.path.join('static', 'uploads', destination_image.filename)
+            thumbnail_image_path = os.path.join('static', 'uploads', thumbnail_image.filename)
+            ipath1 = os.path.join('static', 'uploads', destination1.filename)
+            ipath2 = os.path.join('static', 'uploads', destination2.filename)
+            ipath3 = os.path.join('static', 'uploads', destination3.filename)
+            ipath4 = os.path.join('static', 'uploads', destination4.filename)
+
+            # Replace backslashes with forward slashes
+            destination_image_path = destination_image_path.replace('\\', '/')
+            thumbnail_image_path = thumbnail_image_path.replace('\\', '/')
+            ipath1 = ipath1.replace('\\', '/')
+            ipath2 = ipath2.replace('\\', '/')
+            ipath3 = ipath3.replace('\\', '/')
+            ipath4 = ipath4.replace('\\', '/')
+
+            # Save the file objects
+            destination_image.save(destination_image_path)
+            thumbnail_image.save(thumbnail_image_path)
+            destination1.save(ipath1)
+            destination2.save(ipath2)
+            destination3.save(ipath3)
+            destination4.save(ipath4)
+
+        amenities_str = ', '.join(amenities)
+
+        try:
+            # Insert the destination into the properties table
+            with sqlite3.connect('users.db') as connection:
+                cursor = connection.cursor()
+                cursor.execute(
+                    "INSERT INTO destinations (destination_name,destination_image,description, thumbnail,img1,img2,img3,img4,Price, Amenities) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)",
+                    (destination_name, destination_image_path, destination_description, thumbnail_image_path, ipath1,
+                     ipath2, ipath3, ipath4, Price, amenities_str))
+                connection.commit()
+
+            # Redirect to a success page or do other necessary actions
+            return render_template('destination_listing_success.html', destination_name=destination_name)
+
+        except Exception as e:
+            # Handle exceptions (e.g., database errors)
+            return render_template('destinations_listing.html', error=str(e))
+
+    # If it's a GET request, simply render the property_listing.html template
+    return render_template('destinations_listing.html')
 
 
 if __name__ == '__main__':
