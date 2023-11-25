@@ -524,6 +524,52 @@ def adminsignup():
 def dashboard():
     return render_template('dashboard.html')
 
+@app.route('/Admin_destinations')
+def admindestinations():
+    try:
+        admin_id = session['admin_id']  # Assuming you have stored admin_id in session
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT id, destination_name, thumbnail FROM destinations WHERE admin_id = ?", (admin_id,))
+            destinations_data = cursor.fetchall()
+
+        return render_template('Admin_destinations.html', destinations_data=destinations_data)
+
+    except Exception as e:
+        print(f"Error fetching properties: {e}")
+        destinations_data = []
+        return render_template('Admin_destinations.html', destinations_data=destinations_data, error=str(e))
+
+
+@app.route('/viewbookings/<destination_id>')
+def viewbooking(destination_id):
+    try:
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT * FROM destination_bookings WHERE destination_booking_id = ?", (destination_id,))
+            bookings_data = cursor.fetchall()
+
+        return render_template('admin_view_booking.html', bookings_data=bookings_data)
+
+    except Exception as e:
+        print(f"Error fetching bookings: {e}")
+        bookings_data = []
+        return render_template('admin_view_booking.html', bookings_data=bookings_data, error=str(e))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000)
