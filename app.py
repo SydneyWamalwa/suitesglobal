@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, session,jsonify,url
 import sqlite3
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 app.secret_key = 'your_secret_key'  # Change this to a secure secret key
 
 try:
