@@ -126,7 +126,7 @@ def login():
 
         else:
             # If login fails, you can display an error message or redirect to the login page
-            return render_template('login.html', error='Invalid credentials')
+            return render_template('Login.html', error='Invalid credentials')
 
     return render_template('Login.html')
 
@@ -605,7 +605,7 @@ def viewpropertybooking(destination_id):
 @app.route('/mybookings/')
 def user_bookings():
     if 'user_id' not in session:
-        return redirect(url_for('Login'))
+        return redirect('/Login')
 
     user_id = session['user_id']
 
