@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session,jsonify,url_for
 import sqlite3
 import os
+import logging
 
 app = Flask(__name__, template_folder='templates')
 app.secret_key = 'your_secret_key'  # Change this to a secure secret key
@@ -54,6 +55,8 @@ try:
             check_out DATE NOT NULL,
             guests INTEGER NOT NULL,
             amount VARCHAR NOT NULL,
+            user_id INTEGER NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id),
             FOREIGN KEY (property_id) REFERENCES properties (id)
         )
     ''')
@@ -85,6 +88,8 @@ try:
             check_out DATE NOT NULL,
             guests INTEGER NOT NULL,
             amount VARCHAR NOT NULL,
+            user_id INTEGER NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id),
             FOREIGN KEY (destination_booking_id) REFERENCES destinations (id)
         )
     ''')
@@ -277,6 +282,7 @@ def booking(property_id):
 def submit_booking():
     if 'user_id' not in session:
         return redirect(url_for('login'))
+
     # Extract data from the request
     property_name = request.form.get('property_name')
     guest_name = request.form.get('guest_name')
@@ -290,6 +296,9 @@ def submit_booking():
         with sqlite3.connect('users.db') as connection:
             cursor = connection.cursor()
 
+            # Get the user_id from the session
+            user_id = session['user_id']
+
             # Get the property ID based on the property name
             cursor.execute("SELECT id FROM properties WHERE name=?", (property_name,))
             property_id = cursor.fetchone()
@@ -297,9 +306,9 @@ def submit_booking():
             if property_id:
                 # Insert booking information into the bookings table
                 cursor.execute("""
-                    INSERT INTO bookings (property_id, property_name, check_in, check_out, guests, guest_name, amount)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                """, (property_id[0], property_name, check_in, check_out, guests, guest_name, amount))
+                    INSERT INTO bookings (property_id, property_name, check_in, check_out, guests, guest_name, amount, user_id)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """, (property_id[0], property_name, check_in, check_out, guests, guest_name, amount, user_id))
 
                 # Commit the changes to the database
                 connection.commit()
@@ -426,8 +435,9 @@ def destination_booking(destination_id):
 
 @app.route('/submit_destination_booking', methods=['POST'])
 def submit_destination_booking():
-    if 'admin_id' not in session:
+    if 'user_id' not in session:
         return redirect(url_for('login'))
+
     # Extract data from the request
     destination_name = request.form.get('destination_name')
     guest_name = request.form.get('guest_name')
@@ -435,6 +445,7 @@ def submit_destination_booking():
     check_out = request.form.get('check_out')
     guests = request.form.get('guests')
     amount = request.form.get('amount')
+    user_id = session['user_id']  # Assuming you have stored user_id in session
 
     try:
         # Connect to the database
@@ -448,9 +459,9 @@ def submit_destination_booking():
             if destination_id:
                 # Insert booking information into the bookings table
                 cursor.execute("""
-                    INSERT INTO destination_bookings (destination_booking_id, destination_name, check_in, check_out, guests, guest_name, amount)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                """, (destination_id[0], destination_name, check_in, check_out, guests, guest_name, amount))
+                    INSERT INTO destination_bookings (destination_booking_id, destination_name, check_in, check_out, guests, guest_name, amount, user_id)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """, (destination_id[0], destination_name, check_in, check_out, guests, guest_name, amount, user_id))
 
                 # Commit the changes to the database
                 connection.commit()
@@ -463,6 +474,7 @@ def submit_destination_booking():
     except Exception as e:
         # Handle database errors
         return jsonify({'status': 'error', 'message': str(e)})
+
 #Admin Routes
 @app.route('/Admin_Panel',methods=['GET','POST'])
 def Admin_Panel():
@@ -590,20 +602,37 @@ def viewpropertybooking(destination_id):
         bookings_data = []
         return render_template('admin_property_booking.html', bookings_data=bookings_data, error=str(e))
 
+@app.route('/mybookings/', defaults={'user_id': None})
+@app.route('/mybookings/<int:user_id>')
+def mybooking(user_id):
+    bookings = []
+    destination_bookings = []
+    try:
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
 
+            if user_id is not None:
+                # Fetch bookings for the specific user
+                cursor.execute("SELECT * FROM bookings WHERE user_id = ?", (user_id,))
+                bookings = cursor.fetchall()
 
+                # Fetch destination bookings for the specific user
+                cursor.execute("SELECT * FROM destination_bookings WHERE user_id = ?", (user_id,))
+                destination_bookings = cursor.fetchall()
+    except sqlite3.Error as e:
+        logging.error(f"Database error: {e}")
+    except Exception as e:
+        logging.error(f"Exception in `_query`: {e}")
+    finally:
+        # Ensure the database connection is closed
+        if connection:
+            connection.close()
 
-
-
-
-
-
-
-
-
-
-
-
+    try:
+        return render_template('Booking.html', bookings=bookings, destination_bookings=destination_bookings)
+    except Exception as e:
+        logging.error(f"Error rendering template: {e}")
+        return render_template('Booking.html', bookings=bookings, destination_bookings=destination_bookings, error="An error occurred while fetching bookings.")
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000)
