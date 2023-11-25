@@ -123,7 +123,7 @@ def login():
             # If login fails, you can display an error message or redirect to the login page
             return render_template('login.html', error='Invalid credentials')
 
-    return render_template('login.html')
+    return render_template('Login.html')
 
 @app.route('/Signup', methods=['GET', 'POST'])
 def signup():
@@ -152,7 +152,7 @@ def signup():
             # Handle the case where the email is not unique (already exists in the database)
             return render_template('signup.html', error='Email already exists. Please use a different email.')
 
-    return render_template('signup.html')
+    return render_template('Signup.html')
 
 @app.route('/Success')
 def success():
