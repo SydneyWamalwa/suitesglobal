@@ -602,37 +602,30 @@ def viewpropertybooking(destination_id):
         bookings_data = []
         return render_template('admin_property_booking.html', bookings_data=bookings_data, error=str(e))
 
-@app.route('/mybookings/', defaults={'user_id': None})
-@app.route('/mybookings/<int:user_id>')
-def mybooking(user_id):
-    bookings = []
-    destination_bookings = []
+@app.route('/mybookings/')
+def user_bookings():
+    if 'user_id' not in session:
+        return redirect(url_for('Login'))
+
+    user_id = session['user_id']
+
     try:
+        # Connect to the database
         with sqlite3.connect('users.db') as connection:
             cursor = connection.cursor()
 
-            if user_id is not None:
-                # Fetch bookings for the specific user
-                cursor.execute("SELECT * FROM bookings WHERE user_id = ?", (user_id,))
-                bookings = cursor.fetchall()
+            # Fetch regular property bookings for the specific user
+            cursor.execute("SELECT * FROM bookings WHERE user_id = ?", (user_id,))
+            bookings = cursor.fetchall()
 
-                # Fetch destination bookings for the specific user
-                cursor.execute("SELECT * FROM destination_bookings WHERE user_id = ?", (user_id,))
-                destination_bookings = cursor.fetchall()
-    except sqlite3.Error as e:
-        logging.error(f"Database error: {e}")
-    except Exception as e:
-        logging.error(f"Exception in `_query`: {e}")
-    finally:
-        # Ensure the database connection is closed
-        if connection:
-            connection.close()
+            # Fetch destination bookings for the specific user
+            cursor.execute("SELECT * FROM destination_bookings WHERE user_id = ?", (user_id,))
+            destination_bookings = cursor.fetchall()
 
-    try:
         return render_template('Booking.html', bookings=bookings, destination_bookings=destination_bookings)
-    except Exception as e:
-        logging.error(f"Error rendering template: {e}")
-        return render_template('Booking.html', bookings=bookings, destination_bookings=destination_bookings, error="An error occurred while fetching bookings.")
 
+    except Exception as e:
+        # Handle database errors
+        return render_template('error.html', error=str(e))
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000)

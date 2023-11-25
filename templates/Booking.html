@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bookings</title>
+    <title>Your Bookings</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -34,8 +34,23 @@
             padding: 20px;
             margin: 10px;
             border-radius: 8px;
-            width: 300px; /* Set a fixed width for each container */
-            text-align: left; /* Align text to the left */
+            width: 300px;
+            text-align: left;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .no-booking {
+            text-align: center;
+            color: #888;
+            margin-top: 20px;
         }
 
         /* Add more styles as needed */
@@ -45,46 +60,48 @@
 <body>
 
     <h2>Your Booking Information</h2>
-    <!-- Display bookings -->
+    <!-- Display regular property bookings -->
     <div class="bookings-container">
-        {% if bookings %}
-            <h2>Your Booking Information</h2>
-            {% for booking in bookings %}
-                <!-- Booking details -->
-                <div class="bookings">
-                    <p><strong>Property Name:</strong> {{ booking[3] }}</p>
-                    <p><strong>Guest Name:</strong> {{ booking[1] }}</p>
-                    <p><strong>Check-in:</strong> {{ booking[4] }}</p>
-                    <p><strong>Check-out:</strong> {{ booking[5] }}</p>
-                    <p><strong>Guests:</strong> {{ booking[6] }}</p>
-                    <p><strong>Amount Paid:</strong> {{ booking[7] }}</p>
-                </div>
-            {% endfor %}
-        {% endif %}
-
-        {% if destination_bookings %}
-            <h2>Your Destination Booking Information</h2>
-            {% for destination_booking in destination_bookings %}
-                <!-- Destination booking details -->
-                <div class="bookings">
-                    <p><strong>Destination Name:</strong> {{ destination_booking[3] }}</p>
-                    <p><strong>Guest Name:</strong> {{ destination_booking[2] }}</p>
-                    <p><strong>Check-in:</strong> {{ destination_booking[4] }}</p>
-                    <p><strong>Check-out:</strong> {{ destination_booking[5] }}</p>
-                    <p><strong>Guests:</strong> {{ destination_booking[6] }}</p>
-                    <p><strong>Amount Paid:</strong> {{ destination_booking[7] }}</p>
-                </div>
-            {% endfor %}
-        {% endif %}
-
-        {% if not bookings and not destination_bookings %}
-            <h2>No bookings found</h2>
-        {% endif %}
+        <ul>
+            {% if bookings %}
+                {% for booking in bookings %}
+                    <li>
+                        <div class="bookings">
+                            <strong>Property Name:</strong> {{ booking[3] }}<br>
+                            <strong>Check-in:</strong> {{ booking[4] }}<br>
+                            <strong>Check-out:</strong> {{ booking[5] }}<br>
+                            <strong>Guests:</strong> {{ booking[6] }}<br>
+                            <strong>Amount Paid:</strong> {{ booking[7] }}
+                        </div>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <p class="no-booking">No regular bookings found.</p>
+            {% endif %}
+        </ul>
     </div>
 
-
-
-
+    <h2>Your Destination Booking Information</h2>
+    <!-- Display destination bookings -->
+    <div class="bookings-container">
+        <ul>
+            {% if destination_bookings %}
+                {% for destination_booking in destination_bookings %}
+                    <li>
+                        <div class="bookings">
+                            <strong>Destination Name:</strong> {{ destination_booking[1] }}<br>
+                            <strong>Check-in:</strong> {{ destination_booking[4] }}<br>
+                            <strong>Check-out:</strong> {{ destination_booking[5] }}<br>
+                            <strong>Guests:</strong> {{ destination_booking[6] }}<br>
+                            <strong>Amount Paid:</strong> {{ destination_booking[7] }}
+                        </div>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <p class="no-booking">No destination bookings found.</p>
+            {% endif %}
+        </ul>
+    </div>
 
 </body>
 </html>
