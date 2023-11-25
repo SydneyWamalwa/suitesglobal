@@ -556,6 +556,40 @@ def viewbooking(destination_id):
         bookings_data = []
         return render_template('admin_view_booking.html', bookings_data=bookings_data, error=str(e))
 
+#Admin Properties Routes
+
+@app.route('/Admin_properties')
+def adminproperties():
+    try:
+        admin_id = session['admin_id']  # Assuming you have stored admin_id in session
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT id, name, thumbnail FROM properties WHERE admin_id = ?", (admin_id,))
+            destinations_data = cursor.fetchall()
+
+        return render_template('Admin_properties.html', destinations_data=destinations_data)
+
+    except Exception as e:
+        print(f"Error fetching properties: {e}")
+        destinations_data = []
+        return render_template('Admin_properties.html', destinations_data=destinations_data, error=str(e))
+
+
+@app.route('/viewpropertybookings/<destination_id>')
+def viewpropertybooking(destination_id):
+    try:
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT * FROM bookings WHERE property_id = ?", (destination_id,))
+            bookings_data = cursor.fetchall()
+
+        return render_template('admin_property_booking.html', bookings_data=bookings_data)
+
+    except Exception as e:
+        print(f"Error fetching bookings: {e}")
+        bookings_data = []
+        return render_template('admin_property_booking.html', bookings_data=bookings_data, error=str(e))
+
 
 
 
