@@ -10,6 +10,22 @@
             font-family: 'Arial', sans-serif;
         }
 
+        .type-buttons {
+            margin-bottom: 10px; /* Reduced margin */
+        }
+
+        .type-button {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+        }
+
         .image-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -57,10 +73,24 @@
             text-align: center;
             cursor: pointer;
         }
+
+        p {
+            font-size: smaller; /* Adjust the font size as needed */
+            margin: 0; /* Remove default margin */
+        }
+        h2{
+            text-align: center;
+            color: #3498db;
+        }
     </style>
 </head>
 <body>
-
+    <h2>Listed Stays</h2>
+    <p>Filter by clicking these buttons:</p>
+    <div class="type-buttons">
+        <a href="/type/Apartment" class="type-button">Apartments</a>
+        <a href="/type/Own Compound" class="type-button">Own Compound</a>
+    </div>
     <div class="image-grid">
         {% for property_data in properties_data %}
             <div class="image-item">
@@ -72,6 +102,5 @@
             </div>
         {% endfor %}
     </div>
-
 </body>
 </html>

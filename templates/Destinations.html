@@ -57,10 +57,36 @@
             text-align: center;
             cursor: pointer;
         }
+        .type-button {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+        }
+        p {
+            font-size: smaller; /* Adjust the font size as needed */
+            margin: 0; /* Remove default margin */
+        }
+        h2{
+            text-align: center;
+            color: #3498db;
+        }
     </style>
 </head>
 <body>
-
+    <h2>Listed Destinations</h2>
+    <p>Filter by clicking these buttons:</p>
+    <div class="type-buttons">
+        <a href="/type/Safari" class="type-button">Safari</a>
+        <a href="/type/Ocean_Safari" class="type-button">Ocean Safari</a>
+        <a href="/type/City" class="type-button">City Adventure</a>
+        <a href="/type/Conservancy" class="type-button">Conservancies</a>
+    </div>
     <div class="image-grid">
         {% for destinations_data in destinations_data %}
             <div class="image-item">
