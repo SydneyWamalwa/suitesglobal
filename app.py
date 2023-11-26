@@ -135,7 +135,7 @@ def login():
 
         else:
             # If login fails, you can display an error message or redirect to the login page
-            return render_template('Login.html', error='Invalid credentials')
+            return render_template('/Login', error='Invalid credentials')
 
     return render_template('Login.html')
 
@@ -164,7 +164,7 @@ def signup():
 
         except sqlite3.IntegrityError:
             # Handle the case where the email is not unique (already exists in the database)
-            return render_template('signup.html', error='Email already exists. Please use a different email.')
+            return render_template('/Signup', error='Email already exists. Please use a different email.')
 
     return render_template('Signup.html')
 
