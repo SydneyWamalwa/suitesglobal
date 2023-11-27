@@ -335,6 +335,9 @@ body {
       max-width: 100%;
       margin: 0 auto;
   }
+  .header{
+    width: 100%;
+  }
 }
 
 /* Image-text adjustments for smaller screens */
@@ -412,6 +415,12 @@ body {
     width: 100%;
   }
   .Destination{
+    width: 100%;
+  }
+  .about-section{
+    width: 100%;
+  }
+  .our-commitment{
     width: 100%;
   }
 }
