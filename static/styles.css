@@ -47,9 +47,6 @@ body {
   background-color: #333;
   color: #fff;
   padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   z-index: 1000; /* Ensure the header is above other elements */
 }
 
@@ -60,11 +57,12 @@ body {
 .navbar ul {
   list-style: none;
   display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to the next line on smaller screens */
   margin-right: 20px;
 }
 
-.navbar ul li button {
-  margin-right: 10px; /* Adjust the margin as needed */
+.navbar li {
+  margin-right: 10px;
 }
 
 .navbar a {
@@ -76,6 +74,20 @@ body {
 
 .navbar a:hover {
   color: #ffd700; /* Change to the desired hover color */
+}
+
+/* Responsive adjustments for navigation bar */
+@media (max-width: 767px) {
+  .navbar ul {
+    justify-content: space-between;
+    width: 100%;
+    margin: 0;
+  }
+
+  .navbar li {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
 }
 
 .welcome {
@@ -151,7 +163,7 @@ body {
   margin-bottom: 10px;
 }
 
-@media (max-width: 100%) {
+@media (max-width: 767px) {
   .image-text-container {
     flex-direction: column;
   }
@@ -242,7 +254,7 @@ body {
   background-color: #d3ffb5; /* Light green */
 }
 
-@media (max-width: 100%) {
+@media (max-width: 767px) {
   .testimonial-boxes {
     flex-direction: column;
   }
@@ -421,7 +433,6 @@ ul {
   }
 }
 
-/* General adjustments for smaller screens */
 @media (max-width: 767px) {
   body {
     width: 100%;
@@ -436,9 +447,6 @@ ul {
   }
 
   .our-commitment {
-    width: 100%;
-  }
-  .navbar{
     width: 100%;
   }
 }
