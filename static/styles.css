@@ -320,7 +320,7 @@ body {
 /* Header adjustments for smaller screens */
 @media only screen and (max-width: 100%) {
   .header-content {
-      width: 90%;
+      width: 100%;
       max-width: 100%;
   }
 
