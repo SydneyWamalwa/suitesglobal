@@ -1,13 +1,13 @@
 /* Reset some default styles */
 body, h1, h2, p, ul, li, form {
-    margin: 0;
-    padding: 0;
-  }
+  margin: 0;
+  padding: 0;
+}
 
-  body {
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    line-height: 1.6;
-  }
+body {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  line-height: 1.6;
+}
 
   .container {
     max-width: 1200px;
@@ -317,107 +317,91 @@ body, h1, h2, p, ul, li, form {
     text-decoration: underline;
     color: #ffd700;
 }
-  /* Responsive Design */
-  @media only screen and (max-width: 1200px) {
-    .container {
-        padding: 10px;
-    }
+/* Header adjustments for smaller screens */
+@media only screen and (max-width: 768px) {
+  .header-content {
+      width: 90%;
+      max-width: 100%;
+  }
+
+  .header h1 {
+      font-size: 2em;
+      max-width: 100%;
+      margin: 0 auto;
+  }
+
+  .header p {
+      font-size: 1em;
+      max-width: 100%;
+      margin: 0 auto;
+  }
 }
 
+/* Image-text adjustments for smaller screens */
 @media only screen and (max-width: 768px) {
-    /* Navbar adjustments for smaller screens */
-    .navbar {
-        flex-direction: column;
-        align-items: center;
-        padding: 10px;
-    }
+  .image-text {
+      flex-direction: column;
+      margin: 0;
+  }
 
-    .navbar img {
-        height: 40px;
-        margin-bottom: 10px;
-    }
+  .image-text img {
+      width: 100%;
+      height: auto;
+      margin-bottom: 10px;
+  }
+}
 
-    .navbar ul {
-        margin-top: 10px;
-        margin-right: 0;
-    }
+/* Destination adjustments for smaller screens */
+@media only screen and (max-width: 768px) {
+  .image-container {
+      flex-direction: column;
+      align-items: center;
+  }
 
-    .navbar a {
-        margin: 10px 0;
-    }
+  .image-container img {
+      width: 100%;
+      height: auto;
+      margin-bottom: 10px;
+  }
+}
 
-    /* Header adjustments for smaller screens */
-    .header-content {
-        width: 90%;
-    }
+/* Testimonial-boxes adjustments for smaller screens */
+@media only screen and (max-width: 768px) {
+  .testimonial-boxes {
+      flex-direction: column;
+  }
 
-    .header h1 {
-        font-size: 2em;
-    }
+  .testimonial-box {
+      margin-bottom: 20px;
+  }
+}
 
-    .header p {
-        font-size: 1em;
-    }
+/* Contact-section adjustments for smaller screens */
+@media only screen and (max-width: 768px) {
+  .contact-section {
+      text-align: center;
+  }
 
-    /* Sections adjustments for smaller screens */
-    .image-text {
-        margin: 0;
-    }
+  form {
+      width: 100%;
+      max-width: 100%;
+      margin: auto;
+  }
+}
 
-    .image-text img {
-        width: 100%;
-        height: auto;
-        margin-bottom: 10px;
-    }
+/* Footer adjustments for smaller screens */
+@media only screen and (max-width: 768px) {
+  .footer {
+      font-size: 0.8em;
+  }
 
-    .what-we-do-section h2 {
-        text-align: center;
-    }
+  .footer ul {
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+  }
 
-    /* Destination adjustments for smaller screens */
-    .image-container {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .image-container img {
-        width: 100%;
-        height: auto;
-        margin-bottom: 10px;
-    }
-
-    /* Testimonial-boxes adjustments for smaller screens */
-    .testimonial-boxes {
-        flex-direction: column;
-    }
-
-    .testimonial-box {
-        margin-bottom: 20px;
-    }
-
-    /* Contact-section adjustments for smaller screens */
-    .contact-section {
-        text-align: center;
-    }
-
-    form {
-        width: 100%;
-        max-width: 100%;
-        margin: auto;
-    }
-
-    /* Footer adjustments for smaller screens */
-    .footer {
-        font-size: 0.8em;
-    }
-
-    .footer ul {
-        flex-direction: column;
-        align-items: center;
-        padding: 0;
-    }
-
-    .footer li {
-        margin: 0;
-    }
+  .footer li {
+      margin: 0;
+  }
 }
