@@ -338,7 +338,7 @@ body {
 }
 
 /* Image-text adjustments for smaller screens */
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 100%) {
   .image-text {
       flex-direction: column;
       margin: 0;
@@ -356,6 +356,7 @@ body {
   .image-container {
       flex-direction: column;
       align-items: center;
+      width: 100%;
   }
 
   .image-container img {
