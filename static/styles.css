@@ -318,7 +318,7 @@ body {
     color: #ffd700;
 }
 /* Header adjustments for smaller screens */
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 100%) {
   .header-content {
       width: 90%;
       max-width: 100%;
@@ -352,7 +352,7 @@ body {
 }
 
 /* Destination adjustments for smaller screens */
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 100%) {
   .image-container {
       flex-direction: column;
       align-items: center;
@@ -366,7 +366,7 @@ body {
 }
 
 /* Testimonial-boxes adjustments for smaller screens */
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 100%) {
   .testimonial-boxes {
       flex-direction: column;
   }
