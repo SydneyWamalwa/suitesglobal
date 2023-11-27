@@ -377,7 +377,7 @@ body {
 }
 
 /* Contact-section adjustments for smaller screens */
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 100%) {
   .contact-section {
       text-align: center;
   }
@@ -390,7 +390,7 @@ body {
 }
 
 /* Footer adjustments for smaller screens */
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 100%) {
   .footer {
       font-size: 0.8em;
   }
