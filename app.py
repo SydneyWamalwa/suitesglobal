@@ -321,7 +321,7 @@ def booking(property_id):
 @app.route('/submit_booking', methods=['POST'])
 def submit_booking():
     if 'user_id' not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('Login'))
 
     # Extract data from the request
     property_name = request.form.get('property_name')
@@ -484,7 +484,7 @@ def destination_booking(destination_id):
 @app.route('/submit_destination_booking', methods=['POST'])
 def submit_destination_booking():
     if 'user_id' not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('Login'))
 
     # Extract data from the request
     destination_name = request.form.get('destination_name')
