@@ -327,6 +327,17 @@ ul {
   color: #ffd700;
 }
 
+@media (max-width: 767px) {
+  .navbar ul {
+    flex-wrap: wrap;
+  }
+
+  .navbar li {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+}
+
 /* Header adjustments for smaller screens */
 @media (max-width: 767px) {
   .header-content {
@@ -367,15 +378,17 @@ ul {
 
 /* Destination adjustments for smaller screens */
 @media (max-width: 767px) {
-  .image-container {
-    flex-direction: column;
-    align-items: center;
+  .image-text img {
     width: 100%;
+    height: auto;
+    max-width: 300px; /* Adjust the maximum width as needed */
+    margin-bottom: 10px;
   }
 
   .image-container img {
     width: 100%;
     height: auto;
+    max-width: 200px; /* Adjust the maximum width as needed */
     margin-bottom: 10px;
   }
 }
