@@ -258,9 +258,6 @@ cursor: pointer;
                 <input type="text" id="check_out" name="check_out" readonly>
                 <button type="button" onclick="openCalendar('check_out')">Select Date</button>
 
-                <label for="contacts">Contacts</label>
-                <input type="text" id="contacts" name="contacts" required>
-
                 <label for="guests">Number of Guests</label>
                 <input type="number" id="guests" name="guests" required>
 
@@ -423,7 +420,6 @@ function submitBookingDetails() {
                 + '&check_in=' + encodeURIComponent(document.getElementById('check_in').value)
                 + '&check_out=' + encodeURIComponent(document.getElementById('check_out').value)
                 + '&guests=' + encodeURIComponent(document.getElementById('guests').value)
-                + '&contacts=' +encodeURIComponent(document.getElementById('contacts').value)
                 + '&amount=' + encodeURIComponent(document.getElementById('amount').value);
 
     xhr.open('POST', url, true);
