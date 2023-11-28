@@ -1,168 +1,166 @@
 /* Reset some default styles */
 body, h1, h2, p, ul, li, form {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .container1{
+    text-align: center;
+    background-color: #333;
+  }
+  .commitment-icons {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 20px; /* Adjust the margin as needed */
+  }
+
+  .icon {
+    text-align: center;
+    margin-bottom: 20px; /* Adjust the margin as needed */
+  }
+
+  .icon img {
+    width: 100px; /* Adjust the width as needed */
+    height: 100px; /* Adjust the height as needed */
+  }
+
+  /* Navigation Bar */
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000; /* Ensure the header is above other elements */
+  }
+
+  .navbar img {
+    height: 50px; /* Adjust the height as needed */
+  }
+
+  .navbar ul {
+    list-style: none;
+    display: flex;
+    margin-right: 20px;
+  }
+
+  .navbar ul li button {
+    margin-right: 10px; /* Adjust the margin as needed */
 }
 
-body {
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  line-height: 1.6;
+
+  .navbar a {
+    text-decoration: none;
+    color: #fff;
+    margin: 0 15px;
+    transition: color 0.3s ease;
+  }
+  .navbar a:hover {
+    color: #ffd700; /* Change to the desired hover color */
+  }
+
+
+  .welcome{
+    background-color: #333;
+    text-align: end;
+  }
+
+  body {
+    margin-top: 80px; /* Adjust this value based on the header's height */
+  }
+  /* Header Section */
+  .header {
+    position: relative;
+    text-align: center;
+    color: white;
+  }
+
+  .header img {
+    width: 100%;
+    height: auto;
+  }
+
+  .header-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+  }
+
+  .header p {
+    font-size: 1.2em;
+  }
+
+  /* Sections */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+    align-items: center;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.container1 {
-  text-align: center;
-  background-color: #333;
-}
-
-.commitment-icons {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-top: 20px; /* Adjust the margin as needed */
-}
-
-.icon {
-  text-align: center;
-  margin-bottom: 20px; /* Adjust the margin as needed */
-}
-
-.icon img {
-  width: 100px; /* Adjust the width as needed */
-  height: 100px; /* Adjust the height as needed */
-}
-
-/* Navigation Bar */
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: #333;
-  color: #fff;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 1000; /* Ensure the header is above other elements */
-}
-
-.navbar img {
-  height: 50px; /* Adjust the height as needed */
-}
-
-.navbar ul {
-  list-style: none;
-  display: flex;
-  margin-right: 20px;
-}
-
-.navbar li {
-  margin-right: 10px;
-}
-
-.navbar a {
-  text-decoration: none;
-  color: #fff;
-  margin: 0 15px;
-  transition: color 0.3s ease;
-}
-
-.navbar a:hover {
-  color: #ffd700; /* Change to the desired hover color */
-}
-
-.welcome {
-  background-color: #333;
-  text-align: end;
-}
-
-body {
-  margin-top: 80px; /* Adjust this value based on the header's height */
-}
-
-/* Header Section */
-.header {
-  position: relative;
-  text-align: center;
-  color: white;
-}
-
-.header img {
-  width: 100%;
-  height: auto;
-}
-
-.header-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.header h1 {
-  font-size: 2.5em;
-  margin-bottom: 10px;
-}
-
-.header p {
-  font-size: 1.2em;
-}
-
-/* Sections */
-.container {
-  width: 100%; /* Adjust to full width */
-  box-sizing: border-box; /* Ensure padding is included in the width */
-  padding: 20px;
-  align-items: center;
-}
 
 .about-section {
-  background-color: #f9f9f9;
-  padding: 20px 0;
+    background-color: #f9f9f9;
+    padding: 20px 0;
 }
 
 .image-text-container {
-  display: block;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  margin-top: 20px;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    margin-top: 20px;
 }
 
+
 .image-text {
-  text-align: center;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-left: 20px; /* Adjust the margin as needed */
-  margin-right: 20px; /* Adjust the margin as needed */
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 300px;
+    margin-right: 300px;
 }
 
 .image-text img {
-  width: 200px;
-  height: 200px;
-  margin-bottom: 10px;
+    width: 200px;
+    height: 200px;
+    margin-bottom: 10px;
 }
 
 .container h2{
     text-align: center;
 }
-
-.what-we-do-section {
-  background-color: white;
+.what-we-do-section{
+    background-color: white;
 }
-
-.what-we-do-section h2 {
-  text-align: start;
+.what-we-do-section h2{
+    text-align: start;
 }
-
 .Destination {
   text-align: center;
   background-color: #333;
@@ -189,120 +187,114 @@ body {
 .image-container figcaption {
   font-style: italic;
 }
-
 .image-container img:hover::after {
   display: block;
 }
-
 .header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-
 .image-container {
-  display: flex;
-  justify-content: space-around;
+    display: flex;
+    justify-content: space-between;
 }
 
 .testimonial-boxes {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px; /* Adjust the margin as needed */
-}
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px; /* Adjust the margin as needed */
+  }
 
-.testimonial-box {
-  flex: 1;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin: 0 10px;
-}
+  .testimonial-box {
+    flex: 1;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 10px;
+  }
 
-.box1 {
-  background-color: #ffcccb; /* Light red */
-}
+  .box1 {
+    background-color: #ffcccb; /* Light red */
+  }
 
-.box2 {
-  background-color: #b3e0ff; /* Light blue */
-}
+  .box2 {
+    background-color: #b3e0ff; /* Light blue */
+  }
 
   .box3 {
     background-color: #d3ffb5; /* Light green */
   }
 
+  .contact-section {
+      text-align: center;
+    }
 
-.contact-section {
-  text-align: center;
+    form {
+      width: 70%; /* Adjust the width as needed */
+      max-width: 400px; /* Set a maximum width if desired */
+      margin: auto; /* Center the form horizontally */
+    }
+
+    label {
+      display: block; /* Ensure each label is on a new line */
+      margin-bottom: 8px;
+    }
+
+    input,
+    textarea {
+      width: 100%; /* Make input and textarea full width */
+      padding: 8px;
+      margin-bottom: 16px;
+      box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    }
+
+    button {
+      background-color: #4CAF50; /* Green */
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+  /* Footer */
+  .footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+  }
+  .footer ul{
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+  }
+  .footer li {
+    margin: 0 10px; /* Adjust the margin as needed */
 }
-
-form {
-  width: 70%; /* Adjust the width as needed */
-  max-width: 400px; /* Set a maximum width if desired */
-  margin: auto; /* Center the form horizontally */
-}
-
-label {
-  display: block; /* Ensure each label is on a new line */
-  margin-bottom: 8px;
-}
-
-input,
-textarea {
-  width: 100%; /* Make input and textarea full width */
-  padding: 8px;
-  margin-bottom: 16px;
-  box-sizing: border-box; /* Include padding and border in the element's total width and height */
-}
-
-button {
-  background-color: #4CAF50; /* Green */
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-/* Footer */
-.footer {
-  background-color: #333;
-  color: #fff;
-  text-align: center;
-  padding: 10px 0;
-}
-
-.footer ul {
-  list-style: none;
-  display: flex;
-  justify-content: center;
-  padding: 0;
-}
-
-.footer li {
-  margin: 0 10px; /* Adjust the margin as needed */
-}
-
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  align-content: center;
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    align-content: center;
 }
 
 .footer a {
-  text-decoration: none;
-  color: #fff;
-  margin-right: 20px;
+    text-decoration: none;
+    color: #fff;
+    margin-right: 20px;
 }
 
 .footer a:hover {
-  text-decoration: underline;
-  color: #ffd700;
+    text-decoration: underline;
+    color: #ffd700;
 }
+
