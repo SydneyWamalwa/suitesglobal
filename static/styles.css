@@ -152,16 +152,7 @@ body, h1, h2, p, ul, li, form {
     margin-bottom: 10px;
 }
 
-@media only screen and (max-width: 768px) {
-    .image-text-container {
-        flex-direction: column;
-    }
 
-    .image-text {
-        width: 100%;
-        margin-bottom: 20px;
-    }
-}
 .container h2{
     text-align: center;
 }
@@ -236,16 +227,6 @@ body, h1, h2, p, ul, li, form {
     background-color: #d3ffb5; /* Light green */
   }
 
-  @media only screen and (max-width: 768px) {
-    .testimonial-boxes {
-      flex-direction: column;
-    }
-
-    .testimonial-box {
-      margin-bottom: 20px;
-    }
-  }
-
   .contact-section {
       text-align: center;
     }
@@ -317,107 +298,4 @@ body, h1, h2, p, ul, li, form {
     text-decoration: underline;
     color: #ffd700;
 }
-  /* Responsive Design */
-  @media only screen and (max-width: 1200px) {
-    .container {
-        padding: 10px;
-    }
-}
 
-@media only screen and (max-width: 768px) {
-    /* Navbar adjustments for smaller screens */
-    .navbar {
-        flex-direction: column;
-        align-items: center;
-        padding: 10px;
-    }
-
-    .navbar img {
-        height: 40px;
-        margin-bottom: 10px;
-    }
-
-    .navbar ul {
-        margin-top: 10px;
-        margin-right: 0;
-    }
-
-    .navbar a {
-        margin: 10px 0;
-    }
-
-    /* Header adjustments for smaller screens */
-    .header-content {
-        width: 90%;
-    }
-
-    .header h1 {
-        font-size: 2em;
-    }
-
-    .header p {
-        font-size: 1em;
-    }
-
-    /* Sections adjustments for smaller screens */
-    .image-text {
-        margin: 0;
-    }
-
-    .image-text img {
-        width: 100%;
-        height: auto;
-        margin-bottom: 10px;
-    }
-
-    .what-we-do-section h2 {
-        text-align: center;
-    }
-
-    /* Destination adjustments for smaller screens */
-    .image-container {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .image-container img {
-        width: 100%;
-        height: auto;
-        margin-bottom: 10px;
-    }
-
-    /* Testimonial-boxes adjustments for smaller screens */
-    .testimonial-boxes {
-        flex-direction: column;
-    }
-
-    .testimonial-box {
-        margin-bottom: 20px;
-    }
-
-    /* Contact-section adjustments for smaller screens */
-    .contact-section {
-        text-align: center;
-    }
-
-    form {
-        width: 100%;
-        max-width: 100%;
-        margin: auto;
-    }
-
-    /* Footer adjustments for smaller screens */
-    .footer {
-        font-size: 0.8em;
-    }
-
-    .footer ul {
-        flex-direction: column;
-        align-items: center;
-        padding: 0;
-    }
-
-    .footer li {
-        margin: 0;
-    }
-}
