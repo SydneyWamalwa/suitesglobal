@@ -60,7 +60,6 @@ body {
 .navbar ul {
   list-style: none;
   display: flex;
-  flex-wrap: wrap; /* Allow items to wrap to the next line on smaller screens */
   margin-right: 20px;
 }
 
@@ -82,9 +81,7 @@ body {
 /* Responsive adjustments for navigation bar */
 @media (max-width: 767px) {
   .navbar ul {
-    justify-content: space-between;
-    width: 100%;
-    margin: 0;
+    flex-wrap: nowrap;
   }
 
   .navbar li {
@@ -344,7 +341,7 @@ ul {
 
 @media (max-width: 767px) {
   .navbar ul {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
 
   .navbar li {
