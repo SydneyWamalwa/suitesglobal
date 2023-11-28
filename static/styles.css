@@ -78,18 +78,6 @@ body {
   color: #ffd700; /* Change to the desired hover color */
 }
 
-/* Responsive adjustments for navigation bar */
-@media (max-width: 767px) {
-  .navbar ul {
-    flex-wrap: nowrap;
-  }
-
-  .navbar li {
-    margin-right: 0;
-    margin-bottom: 10px;
-  }
-}
-
 .welcome {
   background-color: #333;
   text-align: end;
@@ -163,16 +151,6 @@ body {
   margin-bottom: 10px;
 }
 
-@media (max-width: 767px) {
-  .image-text-container {
-    flex-direction: column;
-  }
-
-  .image-text {
-    width: 100%;
-    margin-bottom: 20px;
-  }
-}
 
 .container h2 {
   text-align: center;
@@ -254,15 +232,6 @@ body {
   background-color: #d3ffb5; /* Light green */
 }
 
-@media (max-width: 767px) {
-  .testimonial-boxes {
-    flex-direction: column;
-  }
-
-  .testimonial-box {
-    margin-bottom: 20px;
-  }
-}
 
 .contact-section {
   text-align: center;
@@ -337,132 +306,4 @@ ul {
 .footer a:hover {
   text-decoration: underline;
   color: #ffd700;
-}
-
-@media (max-width: 767px) {
-  .navbar ul {
-    flex-wrap: nowrap;
-  }
-
-  .navbar li {
-    margin-right: 0;
-    margin-bottom: 10px;
-  }
-}
-
-/* Header adjustments for smaller screens */
-@media (max-width: 767px) {
-  .header-content {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .header h1 {
-    font-size: 2em;
-    max-width: 100%;
-    margin: 0 auto;
-  }
-
-  .header p {
-    font-size: 1em;
-    max-width: 100%;
-    margin: 0 auto;
-  }
-
-  .header {
-    width: 100%;
-  }
-}
-
-/* Image-text adjustments for smaller screens */
-@media (max-width: 767px) {
-  .image-text img {
-    width: 100%;
-    height: auto;
-    max-width: 300px; /* Adjust the maximum width as needed */
-    margin-bottom: 10px;
-  }
-
-  .image-container img {
-    width: 100%;
-    height: auto;
-    max-width: 200px; /* Adjust the maximum width as needed */
-    margin-bottom: 10px;
-  }
-}
-
-/* Destination adjustments for smaller screens */
-@media (max-width: 767px) {
-  .image-text img {
-    width: 100%;
-    height: auto;
-    max-width: 300px; /* Adjust the maximum width as needed */
-    margin-bottom: 10px;
-  }
-
-  .image-container img {
-    width: 100%;
-    height: auto;
-    max-width: 200px; /* Adjust the maximum width as needed */
-    margin-bottom: 10px;
-  }
-}
-
-/* Testimonial-boxes adjustments for smaller screens */
-@media (max-width: 767px) {
-  .testimonial-boxes {
-    flex-direction: column;
-  }
-
-  .testimonial-box {
-    margin-bottom: 20px;
-  }
-}
-
-/* Contact-section adjustments for smaller screens */
-@media (max-width: 767px) {
-  .contact-section {
-    text-align: center;
-  }
-
-  form {
-    width: 100%;
-    max-width: 100%;
-    margin: auto;
-  }
-}
-
-/* Footer adjustments for smaller screens */
-@media (max-width: 767px) {
-  .footer {
-    font-size: 0.8em;
-  }
-
-  .footer ul {
-    flex-direction: column;
-    align-items: center;
-    padding: 0;
-  }
-
-  .footer li {
-    margin: 0;
-  }
-}
-
-@media (max-width: 767px) {
-  body {
-    width: 100%;
-  }
-
-  .Destination {
-    width: 100%;
-  }
-
-  .about-section {
-    width: 100%;
-  }
-
-  .our-commitment {
-    width: 100%;
-  }
 }
