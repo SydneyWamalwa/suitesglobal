@@ -42,6 +42,7 @@ try:
                 Price INTEGER NOT NULL,
                 Amenities TEXT NOT NULL,
                 admin_id INTEGER NOT NULL,
+                property_type TEXT NOT NULL,
                 FOREIGN KEY (admin_id) REFERENCES admins (id)
             )
         ''')
@@ -56,6 +57,9 @@ try:
             guests INTEGER NOT NULL,
             amount VARCHAR NOT NULL,
             user_id INTEGER NOT NULL,
+            contacts TEXT NOT NULL,
+            property_type TEXT NOT NULL,
+            FOREIGN KEY (property_type) REFERENCES properties(property_type),
             FOREIGN KEY (user_id) REFERENCES users(id),
             FOREIGN KEY (property_id) REFERENCES properties (id)
         )
@@ -74,6 +78,7 @@ try:
             Price INTEGER NOT NULL,
             Amenities TEXT NOT NULL,
             admin_id INTEGER NOT NULL,
+            Type TEXT NOT NULL,
             FOREIGN KEY (admin_id) REFERENCES admins (id)
         )
     ''')
@@ -89,6 +94,9 @@ try:
             guests INTEGER NOT NULL,
             amount VARCHAR NOT NULL,
             user_id INTEGER NOT NULL,
+            contacts TEXT NOT NULL,
+            Type TEXT NOT NULL,
+            FOREIGN KEY (Type) REFERENCES destinations (Type),
             FOREIGN KEY (user_id) REFERENCES users(id),
             FOREIGN KEY (destination_booking_id) REFERENCES destinations (id)
         )
@@ -181,6 +189,35 @@ def properties():
         properties_data = []
         return render_template('properties.html', properties_data=properties_data, error=str(e))
 
+@app.route('/type/Apartment')
+def apartment():
+    try:
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT name, thumbnail FROM properties WHERE property_type = 'Apartment'")
+            apartment_properties = cursor.fetchall()
+
+        return render_template('properties.html', properties_data=apartment_properties)
+
+    except Exception as e:
+        print(f"Error fetching apartment properties: {e}")
+        apartment_properties = []
+        return render_template('properties.html', properties_data=apartment_properties, error=str(e))
+
+@app.route('/type/Own Compound')
+def OwnCompound():
+    try:
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT name, thumbnail FROM properties WHERE property_type = 'Own Compound'")
+            apartment_properties = cursor.fetchall()
+
+        return render_template('properties.html', properties_data=apartment_properties)
+
+    except Exception as e:
+        print(f"Error fetching apartment properties: {e}")
+        apartment_properties = []
+        return render_template('properties.html', properties_data=apartment_properties, error=str(e))
 
 
 
@@ -193,6 +230,7 @@ def property_listing():
         property_description = request.form.get('property_description')
         Price = request.form.get('Price')
         amenities = request.form.getlist('amenities[]')
+        property_type = request.form.get('property_type')
         admin_id = session['admin_id']  # Assuming you have admin_id stored in session
 
         # Check if the POST request has the file part
@@ -235,9 +273,9 @@ def property_listing():
             with sqlite3.connect('users.db') as connection:
                 cursor = connection.cursor()
                 cursor.execute(
-                    "INSERT INTO properties (name, image, description, thumbnail,interiorimg1,interiorimg2,interiorimg3,interiorimg4,Price, Amenities, admin_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                        "INSERT INTO properties (name, image, description, thumbnail,interiorimg1,interiorimg2,interiorimg3,interiorimg4,Price, Amenities, admin_id,property_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)",
                     (property_name, property_image_path, property_description, thumbnail_image_path, ipath1,
-                     ipath2, ipath3, ipath4, Price, amenities_str, admin_id))
+                      ipath2, ipath3, ipath4, Price, amenities_str, admin_id,property_type))
                 connection.commit()
 
             # Redirect to a success page or do other necessary actions
@@ -290,25 +328,29 @@ def submit_booking():
     check_out = request.form.get('check_out')
     guests = request.form.get('guests')
     amount = request.form.get('amount')
+    contacts = request.form.get('contacts')
+    if not contacts:
+        return jsonify({'status': 'error', 'message': 'Contacts is required'})
+
+    amount = request.form.get('amount')
 
     try:
         # Connect to the database
         with sqlite3.connect('users.db') as connection:
             cursor = connection.cursor()
-
             # Get the user_id from the session
             user_id = session['user_id']
-
             # Get the property ID based on the property name
             cursor.execute("SELECT id FROM properties WHERE name=?", (property_name,))
             property_id = cursor.fetchone()
 
+
             if property_id:
                 # Insert booking information into the bookings table
                 cursor.execute("""
-                    INSERT INTO bookings (property_id, property_name, check_in, check_out, guests, guest_name, amount, user_id)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                """, (property_id[0], property_name, check_in, check_out, guests, guest_name, amount, user_id))
+                    INSERT INTO bookings (property_id, property_name, check_in, check_out, guests, guest_name, amount, user_id, contacts, property_type)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, (SELECT property_type FROM properties WHERE id = ?))
+""", (property_id[0], property_name, check_in, check_out, guests, guest_name, amount, user_id, contacts, property_id[0]))
 
                 # Commit the changes to the database
                 connection.commit()
@@ -346,6 +388,7 @@ def destinations_listing():
     if request.method == 'POST':
         destination_name = request.form.get('destination_name')
         destination_description = request.form.get('destination_description')
+        destination_type= request.form.get('destination_type')
         Price = request.form.get('Price')
         amenities = request.form.getlist('amenities[]')
         admin_id = session['admin_id']
@@ -390,9 +433,9 @@ def destinations_listing():
             with sqlite3.connect('users.db') as connection:
                 cursor = connection.cursor()
                 cursor.execute(
-                    "INSERT INTO destinations (destination_name, destination_image, description, thumbnail, img1, img2, img3, img4, Price, Amenities, admin_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    "INSERT INTO destinations (destination_name, destination_image, description, thumbnail, img1, img2, img3, img4, Price, Amenities, admin_id,Type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)",
                     (destination_name, destination_image_path, destination_description, thumbnail_image_path, ipath1,
-                     ipath2, ipath3, ipath4, Price, amenities_str, admin_id))
+                     ipath2, ipath3, ipath4, Price, amenities_str, admin_id,destination_type))
                 connection.commit()
 
             # Redirect to a success page or do other necessary actions
@@ -446,7 +489,7 @@ def submit_destination_booking():
     guests = request.form.get('guests')
     amount = request.form.get('amount')
     user_id = session['user_id']  # Assuming you have stored user_id in session
-
+    contacts=request.form.get('contacts')
     try:
         # Connect to the database
         with sqlite3.connect('users.db') as connection:
@@ -459,9 +502,9 @@ def submit_destination_booking():
             if destination_id:
                 # Insert booking information into the bookings table
                 cursor.execute("""
-                    INSERT INTO destination_bookings (destination_booking_id, destination_name, check_in, check_out, guests, guest_name, amount, user_id)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                """, (destination_id[0], destination_name, check_in, check_out, guests, guest_name, amount, user_id))
+                     INSERT INTO destination_bookings (destination_booking_id, destination_name, check_in, check_out, guests, guest_name, amount, contacts, user_id, Type)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, (SELECT Type FROM destinations WHERE destination_name = ?))
+""", (destination_id[0], destination_name, check_in, check_out, guests, guest_name, amount, contacts, user_id, destination_name))
 
                 # Commit the changes to the database
                 connection.commit()
@@ -474,6 +517,66 @@ def submit_destination_booking():
     except Exception as e:
         # Handle database errors
         return jsonify({'status': 'error', 'message': str(e)})
+
+@app.route('/type/Safari')
+def Safari():
+    try:
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT destination_name, thumbnail FROM destinations WHERE Type = 'Safari'")
+            apartment_properties = cursor.fetchall()
+
+        return render_template('Destinations.html', destinations_data=apartment_properties)
+
+    except Exception as e:
+        print(f"Error fetching apartment properties: {e}")
+        apartment_properties = []
+        return render_template('Destinations.html', destinations_data=apartment_properties, error=str(e))
+
+@app.route('/type/Ocean_Safari')
+def Ocean():
+    try:
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT destination_name, thumbnail FROM destinations WHERE Type = 'Ocean Safari'")
+            apartment_properties = cursor.fetchall()
+
+        return render_template('Destinations.html', destinations_data=apartment_properties)
+
+    except Exception as e:
+        print(f"Error fetching apartment properties: {e}")
+        apartment_properties = []
+        return render_template('Destinations.html', destinations_data=apartment_properties, error=str(e))
+
+@app.route('/type/City')
+def City():
+    try:
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT destination_name, thumbnail FROM destinations WHERE Type = 'City'")
+            apartment_properties = cursor.fetchall()
+
+        return render_template('Destinations.html', destinations_data=apartment_properties)
+
+    except Exception as e:
+        print(f"Error fetching apartment properties: {e}")
+        apartment_properties = []
+        return render_template('Destinations.html', destinations_data=apartment_properties, error=str(e))
+
+@app.route('/type/Conservancy')
+def Conservancy():
+    try:
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT destination_name, thumbnail FROM destinations WHERE Type = 'Conservancy'")
+            apartment_properties = cursor.fetchall()
+
+        return render_template('Destinations.html', destinations_data=apartment_properties)
+
+    except Exception as e:
+        print(f"Error fetching apartment properties: {e}")
+        apartment_properties = []
+        return render_template('Destinations.html', destinations_data=apartment_properties, error=str(e))
 
 #Admin Routes
 @app.route('/Admin_Panel',methods=['GET','POST'])
