@@ -47,6 +47,9 @@ body {
   background-color: #333;
   color: #fff;
   padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   z-index: 1000; /* Ensure the header is above other elements */
 }
 
@@ -129,8 +132,8 @@ body {
 
 /* Sections */
 .container {
-  max-width: 960px;
-  margin: 0 auto;
+  width: 100%; /* Adjust to full width */
+  box-sizing: border-box; /* Ensure padding is included in the width */
   padding: 20px;
   align-items: center;
 }
@@ -153,8 +156,8 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-left: 300px;
-  margin-right: 300px;
+  margin-left: 20px; /* Adjust the margin as needed */
+  margin-right: 20px; /* Adjust the margin as needed */
 }
 
 .image-text img {
@@ -225,7 +228,7 @@ body {
 
 .image-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .testimonial-boxes {
