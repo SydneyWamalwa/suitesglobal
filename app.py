@@ -158,23 +158,24 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
+        next_url = request.args.get('next', '/')  # Get the 'next' parameter from the URL, default to '/'
 
         with sqlite3.connect('users.db') as connection:
             cursor = connection.cursor()
-            cursor.execute("SELECT * FROM users WHERE email=? AND password=?", (email, password))
+            cursor.execute("SELECT * FROM users WHERE email=?", (email,))
             user = cursor.fetchone()
 
-        if user and bcrypt.check_password_hash(user[3],password):
+        if user and check_password_hash(user[3], password):
             # If the user exists, store user information in the session
             session['user_id'] = user[0]
             session['user_name'] = user[1]
 
-            # Redirect to the index page with a welcome message
-            return redirect('/')
+            # Redirect to the original requested page or the home page
+            return redirect(next_url)
 
         else:
             # If login fails, you can display an error message or redirect to the login page
-            return render_template('Login.html', error='Invalid credentials')
+            return render_template('Login.html', error='Invalid credentials', next=next_url)
 
     return render_template('Login.html')
 
@@ -391,6 +392,8 @@ def property_listing():
 @app.route('/booking/', defaults={'property_id': None})
 @app.route('/booking/<int:property_id>')
 def booking(property_id):
+    if 'user_id' not in session:
+        return redirect(url_for('Login', next=request.url))
     try:
         with sqlite3.connect('users.db') as connection:
             cursor = connection.cursor()
@@ -418,7 +421,7 @@ def booking(property_id):
 @app.route('/submit_booking', methods=['POST'])
 def submit_booking():
     if 'user_id' not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('Login', next=request.url))
 
     # Extract data from the request
     property_name = request.form.get('property_name')
@@ -482,7 +485,7 @@ def destinations():
 @app.route('/list_destination', methods=['GET', 'POST'])
 def destinations_listing():
     if 'admin_id' not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('Login', next=request.url))
 
     if request.method == 'POST':
         destination_name = request.form.get('destination_name')
@@ -551,6 +554,8 @@ def destinations_listing():
 @app.route('/booking_destination/', defaults={'destination_id': None})
 @app.route('/booking_destination/<int:destination_id>')
 def destination_booking(destination_id):
+    if 'user_id' not in session:
+        return redirect(url_for('Login', next=request.url))
     try:
         with sqlite3.connect('users.db') as connection:
             cursor = connection.cursor()
@@ -578,7 +583,7 @@ def destination_booking(destination_id):
 @app.route('/submit_destination_booking', methods=['POST'])
 def submit_destination_booking():
     if 'user_id' not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('Login', next=request.url))
 
     # Extract data from the request
     destination_name = request.form.get('destination_name')
