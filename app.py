@@ -393,7 +393,7 @@ def property_listing():
 @app.route('/booking/<int:property_id>')
 def booking(property_id):
     if 'user_id' not in session:
-        return redirect(url_for('Login', next=request.url))
+        return redirect(url_for('login', next=request.url))
     try:
         with sqlite3.connect('users.db') as connection:
             cursor = connection.cursor()
@@ -421,7 +421,7 @@ def booking(property_id):
 @app.route('/submit_booking', methods=['POST'])
 def submit_booking():
     if 'user_id' not in session:
-        return redirect(url_for('Login', next=request.url))
+        return redirect(url_for('login', next=request.url))
 
     # Extract data from the request
     property_name = request.form.get('property_name')
@@ -485,7 +485,7 @@ def destinations():
 @app.route('/list_destination', methods=['GET', 'POST'])
 def destinations_listing():
     if 'admin_id' not in session:
-        return redirect(url_for('Login', next=request.url))
+        return redirect(url_for('login', next=request.url))
 
     if request.method == 'POST':
         destination_name = request.form.get('destination_name')
@@ -555,7 +555,7 @@ def destinations_listing():
 @app.route('/booking_destination/<int:destination_id>')
 def destination_booking(destination_id):
     if 'user_id' not in session:
-        return redirect(url_for('Login', next=request.url))
+        return redirect(url_for('login', next=request.url))
     try:
         with sqlite3.connect('users.db') as connection:
             cursor = connection.cursor()
@@ -583,7 +583,7 @@ def destination_booking(destination_id):
 @app.route('/submit_destination_booking', methods=['POST'])
 def submit_destination_booking():
     if 'user_id' not in session:
-        return redirect(url_for('Login', next=request.url))
+        return redirect(url_for('login', next=request.url))
 
     # Extract data from the request
     destination_name = request.form.get('destination_name')
@@ -812,7 +812,7 @@ def viewpropertybooking(destination_id):
 @app.route('/mybookings/')
 def user_bookings():
     if 'user_id' not in session:
-        return redirect('/Login')
+        return redirect(url_for('login', next=request.url))
 
     user_id = session['user_id']
 
