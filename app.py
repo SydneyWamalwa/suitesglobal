@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect, session,jsonify,url_for
 from flask_mail import Mail, Message
+from flask_bcrypt import generate_password_hash, check_password_hash
+from flask_bcrypt import Bcrypt
 import sqlite3
 import os
 import logging
@@ -13,6 +15,7 @@ app.config['MAIL_USERNAME'] = 'sydneywamalwa@gmail.com'
 app.config['MAIL_PASSWORD'] = 'yhww wxbu bksr tvee'
 app.config['MAIL_DEFAULT_SENDER'] = 'sydneywamalwa@gmail.com'
 
+bcrypt = Bcrypt(app)
 mail = Mail(app)
 try:
     # Create the users table if it doesn't exist
@@ -161,7 +164,7 @@ def login():
             cursor.execute("SELECT * FROM users WHERE email=? AND password=?", (email, password))
             user = cursor.fetchone()
 
-        if user:
+        if user and bcrypt.check_password_hash(user[3],password):
             # If the user exists, store user information in the session
             session['user_id'] = user[0]
             session['user_name'] = user[1]
@@ -175,6 +178,37 @@ def login():
 
     return render_template('Login.html')
 
+@app.route('/SignupTeam', methods=['GET', 'POST'])
+def signupteam():
+    if request.method == 'POST':
+        # Process the form data here (save to database, perform validation, etc.)
+        name = request.form.get('name')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        try:
+            # Hash the password before storing it in the database
+            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+            # Insert the user into the users table
+            with sqlite3.connect('users.db') as connection:
+                cursor = connection.cursor()
+                cursor.execute("INSERT INTO Team (name, email, password) VALUES (?, ?, ?)", (name, email, hashed_password))
+                connection.commit()
+
+            # Store the user's name in the session
+            session['name'] = name
+            session['email'] = email
+
+            # Redirect to the index page with the user's name as a parameter
+            return redirect('/Teamdashboard')
+
+        except sqlite3.IntegrityError:
+            # Handle the case where the email is not unique (already exists in the database)
+            return render_template('SignupTeam.html', error='Email already exists. Please use a different email.')
+
+    return render_template('SignupTeam.html')
+
 @app.route('/LoginTeam', methods=['GET', 'POST'])
 def loginteam():
     if request.method == 'POST':
@@ -183,11 +217,11 @@ def loginteam():
 
         with sqlite3.connect('users.db') as connection:
             cursor = connection.cursor()
-            cursor.execute("SELECT * FROM Team WHERE email=? AND password=?", (email, password))
+            cursor.execute("SELECT * FROM Team WHERE email=?", (email,))
             user = cursor.fetchone()
 
-        if user:
-            # If the user exists, store user information in the session
+        if user and bcrypt.check_password_hash(user[3], password):
+            # If the user exists and the password is correct, store user information in the session
             session['user_id'] = user[0]
             session['user_name'] = user[1]
 
@@ -210,16 +244,18 @@ def signup():
         password = request.form.get('password')
 
         try:
+            # Hash the password before storing it in the database
+            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
             # Insert the user into the users table
             with sqlite3.connect('users.db') as connection:
                 cursor = connection.cursor()
-                cursor.execute("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", (name, email, password))
+                cursor.execute("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", (name, email, hashed_password))
                 connection.commit()
 
             # Store the user's name in the session
             session['name'] = name
-            session['email']= email
-            session['password']= password
+            session['email'] = email
 
             # Redirect to the index page with the user's name as a parameter
             return redirect('/Success')
