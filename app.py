@@ -917,7 +917,6 @@ def send_email(recipient, subject, reply_text, message_id):
 @app.route('/Team_properties')
 def teamproperties():
     try:
-        admin_id = session['admin_id']  # Assuming you have stored admin_id in session
         with sqlite3.connect('users.db') as connection:
             cursor = connection.cursor()
             cursor.execute("SELECT id, name, thumbnail FROM properties")
