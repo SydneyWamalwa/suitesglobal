@@ -234,7 +234,7 @@ def signup():
 def success():
     # Get the user's name from the session
     user_name = session.get('name', 'Guest')
-    return render_template('success.html', user_name=user_name)
+    return render_template('Success.html', user_name=user_name)
 
 
 @app.route('/properties')
