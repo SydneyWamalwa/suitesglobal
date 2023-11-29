@@ -1,11 +1,19 @@
 from flask import Flask, render_template, request, redirect, session,jsonify,url_for
+from flask_mail import Mail, Message
 import sqlite3
 import os
 import logging
 
 app = Flask(__name__, template_folder='templates')
 app.secret_key = 'your_secret_key'  # Change this to a secure secret key
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587  # or your mail server's port
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'sydneywamalwa@gmail.com'
+app.config['MAIL_PASSWORD'] = 'yhww wxbu bksr tvee'
+app.config['MAIL_DEFAULT_SENDER'] = 'sydneywamalwa@gmail.com'
 
+mail = Mail(app)
 try:
     # Create the users table if it doesn't exist
     with sqlite3.connect('users.db') as connection:
@@ -21,6 +29,14 @@ try:
         ''')
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS admins (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                email TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL
+            )
+        ''')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS Team (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
                 email TEXT UNIQUE NOT NULL,
@@ -101,6 +117,24 @@ try:
             FOREIGN KEY (destination_booking_id) REFERENCES destinations (id)
         )
     ''')
+        cursor.execute('''CREATE TABLE IF NOT EXISTS contacts (
+                   id INTEGER PRIMARY KEY AUTOINCREMENT,
+                   name TEXT NOT NULL,
+                   email TEXT NOT NULL,
+                   message TEXT NOT NULL,
+                   user_id INTEGER NOT NULL,
+                   FOREIGN KEY (user_id) REFERENCES users(id)
+               )''')
+        cursor.execute('''
+    CREATE TABLE IF NOT EXISTS replies (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        message_id INTEGER NOT NULL,
+        reply_text TEXT NOT NULL,
+        status INTEGER DEFAULT 0, -- 0 for pending, 1 for replied
+        FOREIGN KEY (message_id) REFERENCES contacts(id)
+    )
+''')
+
         app.logger.debug('Committing changes to the database...')
         connection.commit()
 except Exception as e:
@@ -137,6 +171,32 @@ def login():
             return render_template('Login.html', error='Invalid credentials')
 
     return render_template('Login.html')
+
+@app.route('/LoginTeam', methods=['GET', 'POST'])
+def loginteam():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT * FROM Team WHERE email=? AND password=?", (email, password))
+            user = cursor.fetchone()
+
+        if user:
+            # If the user exists, store user information in the session
+            session['user_id'] = user[0]
+            session['user_name'] = user[1]
+
+            # Pass the admin_name to the template
+            return render_template('Teamdashboard.html', admin_name=user[1])
+
+        else:
+            # If login fails, you can display an error message or redirect to the login page
+            return render_template('TeamLogin.html', error='Invalid credentials')
+
+    return render_template('TeamLogin.html')
+
 
 @app.route('/Signup', methods=['GET', 'POST'])
 def signup():
@@ -730,5 +790,109 @@ def user_bookings():
     except Exception as e:
         # Handle database errors
         return render_template('error.html', error=str(e))
+
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        message = request.form.get('message')
+
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+
+            # Retrieve the user from the database (assuming you have a users table)
+            cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
+            user = cursor.fetchone()
+
+            if user:
+                # If the user exists, store user information in the session
+                session['id'] = user[0]
+                session['user_name'] = user[1]
+
+                # Insert into the contacts table with the user_id
+                cursor.execute("INSERT INTO contacts (name, email, message, user_id) VALUES (?, ?, ?, ?)", (name, email, message, user[0]))
+                connection.commit()
+            else:
+                # If the user does not exist, redirect to the login page
+                return redirect(url_for('login'))
+
+    return render_template('contact.html', user_name=session.get('user_name'), id=session.get('id'))
+
+@app.route('/Teamdashboard')
+def teamdashboard():
+    return render_template('Teamdashboard.html')
+
+@app.route('/Messages')
+def messages():
+    # Fetch messages from the contacts table
+    with sqlite3.connect('users.db') as connection:
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM contacts")
+        messages = cursor.fetchall()
+
+    return render_template('Messages.html', messages=messages)
+
+@app.route('/update_status', methods=['POST'])
+def update_status():
+    try:
+        message_id = request.form.get('messageId')
+
+        # Connect to the database
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+
+            # Update the status in the 'contacts' table
+            cursor.execute("UPDATE contacts SET status = 1 WHERE id = ?", (message_id,))
+
+            # You may also want to update the 'replies' table if needed
+            # Example: cursor.execute("UPDATE replies SET status = 1 WHERE message_id = ?", (message_id,))
+
+            # Commit the changes to the database
+            connection.commit()
+
+            # Return a success response
+            return jsonify({'status': 'success'})
+
+    except Exception as e:
+        # Handle exceptions
+        return jsonify({'status': 'error', 'message': str(e)})
+
+@app.route('/save_reply', methods=['POST'])
+def save_reply():
+    try:
+        message_id = request.form.get('messageId')
+        reply_text = request.form.get('replyText')
+
+        # Connect to the database
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+
+            # Save the reply in the 'replies' table
+            cursor.execute("INSERT INTO replies (message_id, reply_text, status) VALUES (?, ?, 1)", (message_id, reply_text))
+
+            # Get the contact's email address
+            cursor.execute("SELECT email FROM contacts WHERE id = ?", (message_id,))
+            contact_email = cursor.fetchone()[0]
+
+            # Send the email reply
+            send_email(contact_email, 'Reply from B&N INTERNATIONAL LTD', reply_text)
+
+            # Commit the changes to the database
+            connection.commit()
+
+            # Return a success response
+            return jsonify({'status': 'success'})
+
+    except Exception as e:
+        # Handle exceptions
+        return jsonify({'status': 'error', 'message': str(e)})
+
+def send_email(recipient, subject, body):
+    msg = Message(subject, recipients=[recipient])
+    msg.body = body
+    mail.send(msg)
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000)

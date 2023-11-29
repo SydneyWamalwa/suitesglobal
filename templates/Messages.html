@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <title>Messages</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        strong {
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Messages</h2>
+
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>
+                    <strong>Name:</strong> {{ message[1] }}<br>
+                    <strong>Email:</strong> {{ message[2] }}<br>
+                    <strong>Message:</strong> {{ message[3] }}<br>
+                    <strong>Status:</strong>
+                    <label>
+                        <input type="checkbox" {% if message[4] == 1 %}checked{% endif %} onchange="updateStatus({{ message[0] }})">
+                        Replied
+                    </label>
+                    <br><br>
+                    <textarea id="reply_{{ message[0] }}" placeholder="Enter your reply"></textarea>
+                    <button onclick="saveReply({{ message[0] }})">Save Reply</button>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No messages available.</p>
+    {% endif %}
+
+    <script>
+        function updateStatus(messageId) {
+            // Assuming you have a route '/update_status' to handle status updates on the server
+            $.ajax({
+                url: '/update_status',
+                type: 'POST',
+                data: { messageId: messageId },
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+        }
+
+        function saveReply(messageId) {
+            var replyText = document.getElementById(`reply_${messageId}`).value;
+            // Assuming you have a route '/save_reply' to handle saving replies on the server
+            $.ajax({
+                url: '/save_reply',
+                type: 'POST',
+                data: { messageId: messageId, replyText: replyText },
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
