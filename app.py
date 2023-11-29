@@ -126,14 +126,17 @@ try:
                    FOREIGN KEY (user_id) REFERENCES users(id)
                )''')
         cursor.execute('''
-    CREATE TABLE IF NOT EXISTS replies (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        message_id INTEGER NOT NULL,
-        reply_text TEXT NOT NULL,
-        status INTEGER DEFAULT 0, -- 0 for pending, 1 for replied
-        FOREIGN KEY (message_id) REFERENCES contacts(id)
-    )
-''')
+        CREATE TABLE IF NOT EXISTS replies (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            message_id INTEGER NOT NULL,
+            reply_text TEXT NOT NULL,
+            team_id INTEGER NOT NULL,
+            status INTEGER DEFAULT 0, -- 0 for pending, 1 for replied
+            FOREIGN KEY (message_id) REFERENCES contacts(id),
+            FOREIGN KEY (team_id) REFERENCES Team(id)
+        )
+    ''')
+
 
         app.logger.debug('Committing changes to the database...')
         connection.commit()
@@ -868,15 +871,20 @@ def save_reply():
         with sqlite3.connect('users.db') as connection:
             cursor = connection.cursor()
 
+            # Get the team_id from the Team table
+            cursor.execute("SELECT id FROM Team WHERE id = ?", (message_id,))
+
+            team_id = cursor.fetchone()[0]
+
             # Save the reply in the 'replies' table
-            cursor.execute("INSERT INTO replies (message_id, reply_text, status) VALUES (?, ?, 1)", (message_id, reply_text))
+            cursor.execute("INSERT INTO replies (message_id, reply_text, status, team_id) VALUES (?, ?, 1, ?)", (message_id, reply_text, team_id))
 
             # Get the contact's email address
             cursor.execute("SELECT email FROM contacts WHERE id = ?", (message_id,))
             contact_email = cursor.fetchone()[0]
 
             # Send the email reply
-            send_email(contact_email, 'Reply from B&N INTERNATIONAL LTD', reply_text)
+            send_email(contact_email, 'Reply from B&N INTERNATIONAL LTD', reply_text, message_id)
 
             # Commit the changes to the database
             connection.commit()
@@ -888,10 +896,25 @@ def save_reply():
         # Handle exceptions
         return jsonify({'status': 'error', 'message': str(e)})
 
-def send_email(recipient, subject, body):
+
+def send_email(recipient, subject, reply_text, message_id):
+    # Connect to the database to get the original message
+    with sqlite3.connect('users.db') as connection:
+        cursor = connection.cursor()
+
+        # Get the original message from the contacts table
+        cursor.execute("SELECT message FROM contacts WHERE id = ?", (message_id,))
+        original_message = cursor.fetchone()[0]
+
+    # Build the email body with the original message and the reply text
+    body = f"Your Message:\n{original_message}\n\nReply:\n{reply_text}"
+
+    # Create and send the email
     msg = Message(subject, recipients=[recipient])
     msg.body = body
     mail.send(msg)
+
+
 
 
 if __name__ == '__main__':

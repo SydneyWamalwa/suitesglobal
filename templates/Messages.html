@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=1024">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <title>Messages</title>
     <style>
@@ -61,6 +61,11 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
+        .success-message {
+            color: green;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -89,6 +94,8 @@
         <p>No messages available.</p>
     {% endif %}
 
+    <div class="success-message" id="successMessage"></div>
+
     <script>
         function updateStatus(messageId) {
             // Assuming you have a route '/update_status' to handle status updates on the server
@@ -114,6 +121,8 @@
                 data: { messageId: messageId, replyText: replyText },
                 success: function(response) {
                     console.log(response);
+                    // Display pop-up message
+                    alert('Reply successfully delivered.');
                 },
                 error: function(error) {
                     console.error(error);
