@@ -914,8 +914,69 @@ def send_email(recipient, subject, reply_text, message_id):
     msg.body = body
     mail.send(msg)
 
+@app.route('/Team_properties')
+def teamproperties():
+    try:
+        admin_id = session['admin_id']  # Assuming you have stored admin_id in session
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT id, name, thumbnail FROM properties")
+            destinations_data = cursor.fetchall()
+
+        return render_template('Admin_properties.html', destinations_data=destinations_data)
+
+    except Exception as e:
+        print(f"Error fetching properties: {e}")
+        destinations_data = []
+        return render_template('Admin_properties.html', destinations_data=destinations_data, error=str(e))
 
 
+@app.route('/Teamviewpropertybookings/<destination_id>')
+def Teampropertybooking(destination_id):
+    try:
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT * FROM bookings WHERE property_id = ?", (destination_id,))
+            bookings_data = cursor.fetchall()
+
+        return render_template('admin_property_booking.html', bookings_data=bookings_data)
+
+    except Exception as e:
+        print(f"Error fetching bookings: {e}")
+        bookings_data = []
+        return render_template('admin_property_booking.html', bookings_data=bookings_data, error=str(e))
+
+@app.route('/Team_destinations')
+def Teamdestinations():
+    try:
+        admin_id = session['admin_id']  # Assuming you have stored admin_id in session
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT id, destination_name, thumbnail FROM destinations ")
+            destinations_data = cursor.fetchall()
+
+        return render_template('Admin_destinations.html', destinations_data=destinations_data)
+
+    except Exception as e:
+        print(f"Error fetching properties: {e}")
+        destinations_data = []
+        return render_template('Admin_destinations.html', destinations_data=destinations_data, error=str(e))
+
+
+@app.route('/Teamviewbookings/<destination_id>')
+def Teamviewbooking(destination_id):
+    try:
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT * FROM destination_bookings WHERE destination_booking_id = ?", (destination_id,))
+            bookings_data = cursor.fetchall()
+
+        return render_template('admin_view_booking.html', bookings_data=bookings_data)
+
+    except Exception as e:
+        print(f"Error fetching bookings: {e}")
+        bookings_data = []
+        return render_template('admin_view_booking.html', bookings_data=bookings_data, error=str(e))
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000)
