@@ -40,11 +40,22 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
+        p{
+            color: red;
+            text-align: center;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-size: large;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 <h2>Team Login</h2>
-    <form id="loginForm">
+{% if error %}
+    <p>{{ error }}!!!</p>
+{% endif %}
+    <form id="loginForm" action="/LoginTeam" method="post">
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" required>
 
@@ -57,36 +68,6 @@
         <button type="button" onclick="validateLogin()">Login</button>
     </form>
     <div class="admin-text"><a href="/SignupTeam">Don't have an account?Sign up</a></div>
-
-
-
-    <script>
-        function validateLogin() {
-            var name = document.getElementById('name').value;
-            var email = document.getElementById('email').value;
-            var password = document.getElementById('password').value;
-
-            // Simple validation example, you can add more complex validation as needed
-            if (name.trim() === '' || email.trim() === '' || password.trim() === '') {
-                alert('Please enter all fields.');
-            } else {
-                // Send AJAX request to the server
-                $.ajax({
-                    url: '/LoginTeam',
-                    type: 'POST',
-                    data: { name: name, email: email, password: password },
-                    success: function(response) {
-                        // Redirect to the home page upon successful login
-                        window.location.href = '/Teamdashboard';
-                    },
-                    error: function(error) {
-                        // Display an alert for login failure
-                        alert('Login failed. Please check your credentials.');
-                    }
-                });
-            }
-        }
-    </script>
 
 
 </body>
