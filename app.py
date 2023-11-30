@@ -137,8 +137,7 @@ try:
             message_id INTEGER NOT NULL,
             reply_text TEXT NOT NULL,
             team_id INTEGER NOT NULL,
-            status INTEGER DEFAULT 0, -- 0 for pending, 1 for replied
-            FOREIGN KEY (message_id) REFERENCES contacts(id),
+            status INTEGER DEFAULT 0, -- 0 for pending, 1 for replied,
             FOREIGN KEY (team_id) REFERENCES Team(id)
         )
     ''')
@@ -919,39 +918,37 @@ def update_status():
 
 @app.route('/save_reply', methods=['POST'])
 def save_reply():
+
     try:
+        # Get logged in team's id from session
+        team_id = session['user_id']
+
         message_id = request.form.get('messageId')
         reply_text = request.form.get('replyText')
 
-        # Connect to the database
         with sqlite3.connect('users.db') as connection:
             cursor = connection.cursor()
 
-            # Get the team_id from the Team table
-            cursor.execute("SELECT id FROM Team WHERE id = ?", (message_id,))
+            cursor.execute("""
+    INSERT INTO replies (message_id, reply_text, status, team_id)
+    VALUES (?, ?, 1, ?)
+""", (message_id, reply_text, team_id))
 
-            team_id = cursor.fetchone()[0]
 
-            # Save the reply in the 'replies' table
-            cursor.execute("INSERT INTO replies (message_id, reply_text, status, team_id) VALUES (?, ?, 1, ?)", (message_id, reply_text, team_id))
+            cursor.execute("SELECT email FROM contacts WHERE id = ?",
+                           (message_id,))
 
-            # Get the contact's email address
-            cursor.execute("SELECT email FROM contacts WHERE id = ?", (message_id,))
             contact_email = cursor.fetchone()[0]
 
-            # Send the email reply
-            send_email(contact_email, 'Reply from B&N INTERNATIONAL LTD', reply_text, message_id)
+            send_email(contact_email, 'Reply from B&N INTERNATIONAL LTD',
+                       reply_text, message_id)
 
-            # Commit the changes to the database
             connection.commit()
 
-            # Return a success response
-            return jsonify({'status': 'success'})
+        return jsonify({'status': 'success'})
 
     except Exception as e:
-        # Handle exceptions
         return jsonify({'status': 'error', 'message': str(e)})
-
 
 def send_email(recipient, subject, reply_text, message_id):
     # Connect to the database to get the original message
