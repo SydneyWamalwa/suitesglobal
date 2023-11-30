@@ -448,8 +448,6 @@ def submit_booking():
     if not contacts:
         return jsonify({'status': 'error', 'message': 'Contacts is required'})
 
-    amount = request.form.get('amount')
-
     try:
         # Connect to the database
         with sqlite3.connect('users.db') as connection:
@@ -459,7 +457,6 @@ def submit_booking():
             # Get the property ID based on the property name
             cursor.execute("SELECT id FROM properties WHERE name=?", (property_name,))
             property_id = cursor.fetchone()
-
 
             if property_id:
                 # Insert booking information into the bookings table
@@ -471,6 +468,9 @@ def submit_booking():
                 # Commit the changes to the database
                 connection.commit()
 
+                # Send email confirmation
+                send_staysbooking_confirmation_email(user_id, guest_name, property_name, check_in, check_out, guests, amount, contacts)
+
                 # Respond with a success message
                 return jsonify({'status': 'success', 'message': 'Booking submitted successfully'})
             else:
@@ -479,6 +479,75 @@ def submit_booking():
     except Exception as e:
         # Handle database errors
         return jsonify({'status': 'error', 'message': str(e)})
+
+def send_staysbooking_confirmation_email(user_id, guest_name, destination_name, check_in, check_out, guests, amount, contacts):
+    user_email = get_staysuser_email(user_id)  # Implement a function to get the user's email based on user_id
+    if user_email:
+        subject = 'Booking Confirmation'
+        body = f"""
+    <html>
+    <head>
+        <style>
+            body {{
+                font-family: 'Arial', sans-serif;
+                background-color: #f4f4f4;
+                color: #333;
+            }}
+            .container {{
+                max-width: 600px;
+                margin: 20px auto;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }}
+            h1 {{
+                color: #3498db;
+            }}
+            p {{
+                margin-bottom: 15px;
+            }}
+            .thank-you-message {{
+                font-weight: bold;
+                color: #27ae60;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Dear {guest_name},</h1>
+            <p>Your booking details:</p>
+            <p><strong>Property Name:</strong> {destination_name}</p>
+            <p><strong>Check-in:</strong> {check_in}</p>
+            <p><strong>Check-out:</strong> {check_out}</p>
+            <p><strong>Number of Guests:</strong> {guests}</p>
+            <p><strong>Amount:</strong> {amount}</p>
+            <p><strong>Contacts:</strong> {contacts}</p>
+            <p class="thank-you-message">Thank you for choosing our service!</p>
+        </div>
+    </body>
+    </html>
+"""
+
+# Now you can use the 'body' variable in your email sending function
+
+
+        send_email_stays_booking(user_email, subject, body)
+
+def get_staysuser_email(user_id):
+    # Implement a function to get the user's email based on user_id
+    # You may need to query your database to retrieve the user's email
+    with sqlite3.connect('users.db') as connection:
+        cursor = connection.cursor()
+        cursor.execute("SELECT email FROM users WHERE id=?", (user_id,))
+        user = cursor.fetchone()
+        if user:
+            return user[0]
+    return None
+
+def send_email_stays_booking(recipient, subject, body):
+    message = Message(subject, recipients=[recipient], body=body)
+    mail.send(message)
 
 #Destinations Code
 @app.route('/Destinations')
@@ -623,7 +692,8 @@ def submit_destination_booking():
                      INSERT INTO destination_bookings (destination_booking_id, destination_name, check_in, check_out, guests, guest_name, amount, contacts, user_id, Type)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, (SELECT Type FROM destinations WHERE destination_name = ?))
 """, (destination_id[0], destination_name, check_in, check_out, guests, guest_name, amount, contacts, user_id, destination_name))
-
+                # Send email to the user
+                send_booking_confirmation_email(user_id, guest_name, destination_name, check_in, check_out, guests, amount, contacts)
                 # Commit the changes to the database
                 connection.commit()
 
@@ -636,6 +706,74 @@ def submit_destination_booking():
         # Handle database errors
         return jsonify({'status': 'error', 'message': str(e)})
 
+def send_booking_confirmation_email(user_id, guest_name, destination_name, check_in, check_out, guests, amount, contacts):
+    user_email = get_user_email(user_id)  # Implement a function to get the user's email based on user_id
+    if user_email:
+        subject = 'Booking Confirmation'
+        body = f"""
+    <html>
+    <head>
+        <style>
+            body {{
+                font-family: 'Arial', sans-serif;
+                background-color: #f4f4f4;
+                color: #333;
+            }}
+            .container {{
+                max-width: 600px;
+                margin: 20px auto;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }}
+            h1 {{
+                color: #3498db;
+            }}
+            p {{
+                margin-bottom: 15px;
+            }}
+            .thank-you-message {{
+                font-weight: bold;
+                color: #27ae60;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Dear {guest_name},</h1>
+            <p>Your booking details:</p>
+            <p><strong>Destination Name:</strong> {destination_name}</p>
+            <p><strong>Check-in:</strong> {check_in}</p>
+            <p><strong>Check-out:</strong> {check_out}</p>
+            <p><strong>Number of Guests:</strong> {guests}</p>
+            <p><strong>Amount:</strong> {amount}</p>
+            <p><strong>Contacts:</strong> {contacts}</p>
+            <p class="thank-you-message">Thank you for choosing our service!</p>
+        </div>
+    </body>
+    </html>
+"""
+
+# Now you can use the 'body' variable in your email sending function
+
+
+        send_email_destinations_booking(user_email, subject, body)
+
+def get_user_email(user_id):
+    # Implement a function to get the user's email based on user_id
+    # You may need to query your database to retrieve the user's email
+    with sqlite3.connect('users.db') as connection:
+        cursor = connection.cursor()
+        cursor.execute("SELECT email FROM users WHERE id=?", (user_id,))
+        user = cursor.fetchone()
+        if user:
+            return user[0]
+    return None
+
+def send_email_destinations_booking(recipient, subject, body):
+    message = Message(subject, recipients=[recipient], body=body)
+    mail.send(message)
 @app.route('/type/Safari')
 def Safari():
     try:
