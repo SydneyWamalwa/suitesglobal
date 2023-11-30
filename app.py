@@ -483,51 +483,15 @@ def submit_booking():
 def send_staysbooking_confirmation_email(user_id, guest_name, destination_name, check_in, check_out, guests, amount, contacts):
     user_email = get_staysuser_email(user_id)  # Implement a function to get the user's email based on user_id
     if user_email:
-        subject = 'Booking Confirmation'
-        body = f"""
-    <html>
-    <head>
-        <style>
-            body {{
-                font-family: 'Arial', sans-serif;
-                background-color: #f4f4f4;
-                color: #333;
-            }}
-            .container {{
-                max-width: 600px;
-                margin: 20px auto;
-                padding: 20px;
-                background-color: #fff;
-                border-radius: 8px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            }}
-            h1 {{
-                color: #3498db;
-            }}
-            p {{
-                margin-bottom: 15px;
-            }}
-            .thank-you-message {{
-                font-weight: bold;
-                color: #27ae60;
-            }}
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1>Dear {guest_name},</h1>
-            <p>Your booking details:</p>
-            <p><strong>Property Name:</strong> {destination_name}</p>
-            <p><strong>Check-in:</strong> {check_in}</p>
-            <p><strong>Check-out:</strong> {check_out}</p>
-            <p><strong>Number of Guests:</strong> {guests}</p>
-            <p><strong>Amount:</strong> {amount}</p>
-            <p><strong>Contacts:</strong> {contacts}</p>
-            <p class="thank-you-message">Thank you for choosing our service!</p>
-        </div>
-    </body>
-    </html>
-"""
+        subject = 'B&N Booking Confirmation'
+        body = f'Dear {guest_name},\n\nYour booking details:\n\n' \
+               f'Property Name: {destination_name}\n' \
+               f'Check-in: {check_in}\n' \
+               f'Check-out: {check_out}\n' \
+               f'Number of Guests: {guests}\n' \
+               f'Amount: {amount}\n' \
+               f'Contacts: {contacts}\n\n' \
+               f'Thank you for choosing our service!'
 
 # Now you can use the 'body' variable in your email sending function
 
@@ -709,51 +673,15 @@ def submit_destination_booking():
 def send_booking_confirmation_email(user_id, guest_name, destination_name, check_in, check_out, guests, amount, contacts):
     user_email = get_user_email(user_id)  # Implement a function to get the user's email based on user_id
     if user_email:
-        subject = 'Booking Confirmation'
-        body = f"""
-    <html>
-    <head>
-        <style>
-            body {{
-                font-family: 'Arial', sans-serif;
-                background-color: #f4f4f4;
-                color: #333;
-            }}
-            .container {{
-                max-width: 600px;
-                margin: 20px auto;
-                padding: 20px;
-                background-color: #fff;
-                border-radius: 8px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            }}
-            h1 {{
-                color: #3498db;
-            }}
-            p {{
-                margin-bottom: 15px;
-            }}
-            .thank-you-message {{
-                font-weight: bold;
-                color: #27ae60;
-            }}
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1>Dear {guest_name},</h1>
-            <p>Your booking details:</p>
-            <p><strong>Destination Name:</strong> {destination_name}</p>
-            <p><strong>Check-in:</strong> {check_in}</p>
-            <p><strong>Check-out:</strong> {check_out}</p>
-            <p><strong>Number of Guests:</strong> {guests}</p>
-            <p><strong>Amount:</strong> {amount}</p>
-            <p><strong>Contacts:</strong> {contacts}</p>
-            <p class="thank-you-message">Thank you for choosing our service!</p>
-        </div>
-    </body>
-    </html>
-"""
+        subject = 'B&N Booking Confirmation'
+        body = f'Dear {guest_name},\n\nYour booking details:\n\n' \
+               f'Destination: {destination_name}\n' \
+               f'Check-in: {check_in}\n' \
+               f'Check-out: {check_out}\n' \
+               f'Number of Guests: {guests}\n' \
+               f'Amount: {amount}\n' \
+               f'Contacts: {contacts}\n\n' \
+               f'Thank you for choosing our service!'
 
 # Now you can use the 'body' variable in your email sending function
 
