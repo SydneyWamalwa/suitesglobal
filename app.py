@@ -902,7 +902,7 @@ def update_status():
             cursor = connection.cursor()
 
             # Update the status in the 'contacts' table
-            cursor.execute("UPDATE contacts SET status = 1 WHERE id = ?", (message_id,))
+            cursor.execute("UPDATE replies SET status = 1 WHERE id = ?", (message_id,))
 
             # You may also want to update the 'replies' table if needed
             # Example: cursor.execute("UPDATE replies SET status = 1 WHERE message_id = ?", (message_id,))
