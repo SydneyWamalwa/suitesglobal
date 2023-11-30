@@ -214,6 +214,12 @@ body, h1, h2, p, ul, li, form {
     margin: 0 10px;
   }
 
+  .testimonial-author {
+    margin-top: 15px;
+    font-style: italic;
+    color: #555;
+}
+
   .box1 {
     background-color: #ffcccb; /* Light red */
   }
