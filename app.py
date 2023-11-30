@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, session,jsonify,url_for
+from flask_session import Session
 from flask_mail import Mail, Message
 from flask_bcrypt import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
@@ -15,6 +16,8 @@ app.config['MAIL_USERNAME'] = 'sydneywamalwa@gmail.com'
 app.config['MAIL_PASSWORD'] = 'yhww wxbu bksr tvee'
 app.config['MAIL_DEFAULT_SENDER'] = 'sydneywamalwa@gmail.com'
 
+app.config['SESSION_TYPE'] = 'filesystem'  # Use 'filesystem' for a session cookie
+Session(app)
 bcrypt = Bcrypt(app)
 mail = Mail(app)
 try:
@@ -158,7 +161,6 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-        next_url = request.args.get('next', '/')  # Get the 'next' parameter from the URL, default to '/'
 
         with sqlite3.connect('users.db') as connection:
             cursor = connection.cursor()
@@ -171,13 +173,20 @@ def login():
             session['user_name'] = user[1]
 
             # Redirect to the original requested page or the home page
-            return redirect(next_url)
+            return redirect('/SuccessLogin')
 
         else:
             # If login fails, you can display an error message or redirect to the login page
-            return render_template('Login.html', error='Invalid credentials', next=next_url)
+            return render_template('Login.html', error='Invalid credentials')
 
     return render_template('Login.html')
+
+
+@app.route('/logout')
+def logout():
+    # Clear session variables
+    session.clear()
+    return render_template('index.html')
 
 @app.route('/SignupTeam', methods=['GET', 'POST'])
 def signupteam():
@@ -270,8 +279,14 @@ def signup():
 @app.route('/Success')
 def success():
     # Get the user's name from the session
-    user_name = session.get('name', 'Guest')
+    user_name = session.get('name')
     return render_template('Success.html', user_name=user_name)
+
+@app.route('/SuccessLogin')
+def successlogin():
+    # Get the user's name from the session
+    user_name = session.get('user_name')
+    return render_template('Loginsuccess.html', user_name=user_name)
 
 
 @app.route('/properties')
