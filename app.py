@@ -874,7 +874,7 @@ def contact():
                 connection.commit()
             else:
                 # If the user does not exist, redirect to the login page
-                return render_template('Login.html')
+                return render_template('Signup.html')
 
     return render_template('contact.html', user_name=session.get('user_name'), id=session.get('id'))
 

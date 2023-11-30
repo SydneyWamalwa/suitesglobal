@@ -2,12 +2,44 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1024">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Successful</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        p {
+            color: #555;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>Signup Successful!</h1>
-    <p>Thank you for contacting us, {{ user_name }}.Your ticket number is{{id}}. You will get response on email.</p>
+    <h1>Message Sent Successfully!</h1>
+    <p>Thank you for contacting us, {{ user_name }}. Your ticket has been raised. You will get a response via email in the next 24 hours.</p>
     <p><a href="/">Go back to Home</a></p>
 </body>
 </html>

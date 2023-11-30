@@ -305,3 +305,17 @@ body, h1, h2, p, ul, li, form {
   font-family: Arial, Helvetica, sans-serif;
   font-size: small;
 }
+
+/*flash styles*/
+.flashes {
+  margin-top: 20px;
+}
+
+.flash-success {
+  color: green;
+}
+
+.flash-error {
+  color: red;
+}
+
