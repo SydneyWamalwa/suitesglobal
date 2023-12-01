@@ -254,11 +254,11 @@ cursor: pointer;
 
         <div class="containerreview" onclick="window.location.href='{{ url_for('desreviews') }}';" style="cursor: pointer;">
             <img src="/static/images/reviews.png" alt="reviews">
-            {% if reviews %}
-                <p>Reviews: {{ reviews|length }}</p>
-            {% else %}
-                <p>No reviews available for this property.</p>
-            {% endif %}
+            {% if review %}
+            <p>Reviews: {{ review|length }}</p>
+        {% else %}
+            <p>No reviews available for this property.</p>
+        {% endif %}
         </div>
 
 

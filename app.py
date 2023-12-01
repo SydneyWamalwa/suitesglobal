@@ -622,6 +622,10 @@ def destination_booking(destination_id):
             cursor.execute("SELECT * FROM destinations WHERE id=?", (destination_id,))
             destinations_data = cursor.fetchone()
 
+            # Fetch reviews for the property
+            cursor.execute("SELECT * FROM destinationreviews WHERE destination_id=?", (destination_id,))
+            reviews = cursor.fetchall()
+
             # Set property_id in the session
             session['destination_id'] = destination_id
 
@@ -629,7 +633,7 @@ def destination_booking(destination_id):
 
         if destinations_data:
             # Property information found, pass it to the booking_details.html template
-            return render_template('destination_booking.html', destinations_data=destinations_data)
+            return render_template('destination_booking.html', destinations_data=destinations_data,review=reviews)
         else:
             # Property not found, you may want to handle this case
             return render_template('error.html', error='destination not found')
