@@ -7,8 +7,9 @@ import sqlite3
 import os
 import logging
 
+secret_key = os.urandom(24)
 app = Flask(__name__, template_folder='templates')
-app.secret_key = 'your_secret_key'  # Change this to a secure secret key
+app.secret_key = secret_key
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587  # or your mail server's port
 app.config['MAIL_USE_TLS'] = True
