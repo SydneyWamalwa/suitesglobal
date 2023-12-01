@@ -83,7 +83,7 @@
 }
 
 .additional-image img {
-    width: 100%;
+    width: 100px;
     height: 100px;
     border-radius: 8px;
     display: flex;
@@ -114,6 +114,16 @@ p {
         }
 .container{
     display: flex;
+}
+.containerreview img{
+    height: 50px;
+
+}
+.containerreview{
+    display: flex;
+    align-self: start;
+    margin-left: 30px;
+    margin-top: 10px;
 }
 
 .booking-details-container1,
@@ -217,7 +227,7 @@ p {
 
     <div class="booking-details-container">
         <img src="/{{ property_data[2] }}" alt="{{ property_data[0] }}" class="property-image">
-
+        </div>
         <!-- Additional Images Container -->
         <div class="additional-images-container">
             <div class="additional-image">
@@ -233,13 +243,24 @@ p {
                 <img src="/{{ property_data[8] }}" alt="{{ property_data[0] }}">
             </div>
         </div>
-        </div>
         <div class="container">
         <div class="booking-details-container1">
             <h2>Property: <p>{{ property_data[1] }}</p></h2>
             <h2>Description: <p>{{ property_data[3] }}</p></h2><br>
             <h2>Amenities: <p>{{ property_data[10] }}</p></h2>
         </div>
+        <!-- Add this section to display reviews -->
+        <div class="containerreview" onclick="window.location.href='{{ url_for('reviews', property_id=property_data.id) }}';" style="cursor: pointer;">
+            <img src="/static/images/reviews.png" alt="reviews">
+
+            {% if reviews_data %}
+                <p>Reviews: {{ reviews_data|length }}</p>
+            {% else %}
+                <p>No reviews available for this property.</p>
+            {% endif %}
+        </div>
+
+
 
         <div class="booking-details-container2">
             <h2>Booking Form</h2>

@@ -55,6 +55,16 @@
 
         /* Add more styles as needed */
 
+        .review-button {
+            display: block;
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -73,6 +83,8 @@
                             <strong>Guests:</strong> {{ booking[6] }}<br>
                             <strong>Amount Paid:</strong> {{ booking[7] }}
                             <strong>Contacts:</strong> {{ booking[9] }}
+
+                            <button class="review-button" onclick="window.location.href='{{ url_for('review', booking_id=booking[0]) }}';">Review</button>
                         </div>
                     </li>
                 {% endfor %}
@@ -96,6 +108,8 @@
                             <strong>Guests:</strong> {{ destination_booking[6] }}<br>
                             <strong>Amount Paid:</strong> {{ destination_booking[7] }}
                             <strong>Contacts:</strong> {{destination_booking[8]}}
+
+                            <button class="review-button" onclick="window.location.href='{{ url_for('destinationreview', destination_id=destination_booking[0]) }}';">Review</button>
                         </div>
                     </li>
                 {% endfor %}

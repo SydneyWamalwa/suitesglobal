@@ -83,7 +83,7 @@ overflow: hidden;
 }
 
 .additional-image img {
-width: 100%;
+width: 100px;
 height: 100px;
 border-radius: 8px;
 display: flex;
@@ -205,6 +205,17 @@ text-decoration: none;
 cursor: pointer;
 }
 
+.containerreview{
+    display: flex;
+    align-self: start;
+    margin-left: 30px;
+    margin-top: 10px;
+}
+
+.containerreview img{
+    height: 50px;
+
+}
 </style>
     <!-- Include SweetAlert2 CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -217,7 +228,7 @@ cursor: pointer;
 
     <div class="booking-details-container">
         <img src="/{{ destinations_data[4] }}" alt="{{ destinations_data[0] }}" class="property-image">
-
+</div>
         <!-- Additional Images Container -->
         <div class="additional-images-container">
             <div class="additional-image">
@@ -233,13 +244,23 @@ cursor: pointer;
                 <img src="/{{ destinations_data[8] }}" alt="{{ destinations_data[0] }}">
             </div>
         </div>
-        </div>
+
         <div class="container">
         <div class="booking-details-container1">
             <h2>Destination: <p>{{ destinations_data[1] }}</p></h2>
             <h2>Description: <p>{{ destinations_data[3] }}</p></h2><br>
             <h2>Amenities: <p>{{ destinations_data[10] }}</p></h2>
         </div>
+
+        <div class="containerreview" onclick="window.location.href='{{ url_for('desreviews') }}';" style="cursor: pointer;">
+            <img src="/static/images/reviews.png" alt="reviews">
+            {% if reviews %}
+                <p>Reviews: {{ reviews|length }}</p>
+            {% else %}
+                <p>No reviews available for this property.</p>
+            {% endif %}
+        </div>
+
 
         <div class="booking-details-container2">
             <h2>Booking Form</h2>

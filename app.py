@@ -417,13 +417,19 @@ def booking(property_id):
                 cursor.execute("SELECT id FROM properties ORDER BY RANDOM() LIMIT 1")
                 property_id = cursor.fetchone()[0]
 
+                # Set property_id in the session
+                session['property_id'] = property_id
             # Fetch the property with the provided ID
             cursor.execute("SELECT * FROM properties WHERE id=?", (property_id,))
             property_data = cursor.fetchone()
 
+            # Fetch reviews for the property
+            cursor.execute("SELECT * FROM reviews WHERE property_id=?", (property_id,))
+            reviews_data = cursor.fetchall()
+
         if property_data:
             # Property information found, pass it to the booking_details.html template
-            return render_template('booking_details.html', property_data=property_data)
+            return render_template('booking_details.html', property_data=property_data, reviews_data=reviews_data)
         else:
             # Property not found, you may want to handle this case
             return render_template('error.html', error='Property not found')
@@ -616,6 +622,11 @@ def destination_booking(destination_id):
             cursor.execute("SELECT * FROM destinations WHERE id=?", (destination_id,))
             destinations_data = cursor.fetchone()
 
+            # Set property_id in the session
+            session['destination_id'] = destination_id
+
+
+
         if destinations_data:
             # Property information found, pass it to the booking_details.html template
             return render_template('destination_booking.html', destinations_data=destinations_data)
@@ -649,6 +660,7 @@ def submit_destination_booking():
             # Get the destination ID based on the destination name
             cursor.execute("SELECT id FROM destinations WHERE destination_name=?", (destination_name,))
             destination_id = cursor.fetchone()
+
 
             if destination_id:
                 # Insert booking information into the bookings table
@@ -1095,6 +1107,144 @@ def Teamviewbooking(destination_id):
         print(f"Error fetching bookings: {e}")
         bookings_data = []
         return render_template('admin_view_booking.html', bookings_data=bookings_data, error=str(e))
+
+#add reviews
+@app.route('/review/<int:booking_id>', methods=['GET', 'POST'])
+def review(booking_id):
+    if request.method == 'POST':
+        review_text = request.form['review_text']
+        name = request.form['name']
+
+        try:
+            with sqlite3.connect('users.db') as connection:
+                cursor = connection.cursor()
+
+                # Fetch booking details for the given booking_id
+                cursor.execute("SELECT * FROM bookings WHERE id=?", (booking_id,))
+                booking_details = cursor.fetchone()
+
+                if booking_details:
+                    property_id = booking_details[2]
+
+                    # Insert the review into the reviews table
+                    cursor.execute("INSERT INTO reviews (review, property_id,name) VALUES (?, ?, ?)",
+                                   (review_text, property_id,name))
+
+                    connection.commit()
+
+                else:
+                    return render_template('error.html', error='Booking not found')
+
+        except Exception as e:
+            print(f"Error inserting review into the database: {e}")
+            return render_template('error.html', error=str(e))
+
+    return render_template('property_review.html', booking_id=booking_id)
+
+#show reviews
+@app.route('/reviews', methods=['GET'])
+def reviews():
+    # Retrieve property_id from session
+    stored_property_id = session.get('property_id')
+
+    print(f"Stored Property ID: {stored_property_id}")
+
+    if not stored_property_id:
+        return render_template('error.html', error='Property ID not provided in session')
+
+    cursor = None  # Initialize cursor outside the try block
+
+    try:
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+
+            # Check if the property_id from session exists in the reviews table
+            cursor.execute("SELECT * FROM reviews WHERE property_id=?", (stored_property_id,))
+            reviews = cursor.fetchall()
+
+            print(f"Reviews: {reviews}")
+
+            if not reviews:
+                return render_template('error.html', error='No reviews available for this property')
+
+    except sqlite3.Error as e:
+        print(f"SQLite error: {e}")
+        return render_template('error.html', error=f"Error fetching reviews from the database: {e}")
+
+    finally:
+        if cursor:
+            cursor.close()
+
+    return render_template('review.html', reviews=reviews)
+
+#add destination reviews
+@app.route('/destinationreview/<int:destination_id>', methods=['GET', 'POST'])
+def destinationreview(destination_id):
+    if request.method == 'POST':
+        review_text = request.form['review_text']
+        name = request.form['name']
+
+        try:
+            with sqlite3.connect('users.db') as connection:
+                cursor = connection.cursor()
+
+                # Fetch booking details for the given booking_id
+                cursor.execute("SELECT * FROM destination_bookings WHERE id=?", (destination_id,))
+                destination_booking_details = cursor.fetchone()
+
+                if destination_booking_details:
+                    destination_id = destination_booking_details[3]
+
+                    # Insert the review into the reviews table
+                    cursor.execute("INSERT INTO destinationreviews (review, destination_id,name) VALUES (?, ?, ?)",
+                                   (review_text, destination_id,name))
+
+                    connection.commit()
+
+                else:
+                    return render_template('error.html', error='Booking not found')
+
+        except Exception as e:
+            print(f"Error inserting review into the database: {e}")
+            return render_template('error.html', error=str(e))
+
+    return render_template('destination_review.html', destination_id=destination_id)
+
+#show reviews
+@app.route('/destination_reviews', methods=['GET'])
+def desreviews():
+    # Retrieve destination_id from session
+    stored_destination_id = session.get('destination_id')
+
+    print(f"Stored Destination ID: {stored_destination_id}")
+
+    if not stored_destination_id:
+        return render_template('error.html', error='Destination ID not provided in session')
+
+    cursor = None  # Initialize cursor outside the try block
+
+    try:
+        with sqlite3.connect('users.db') as connection:
+            cursor = connection.cursor()
+
+            # Check if the destination_id from session exists in the reviews table
+            cursor.execute("SELECT * FROM destinationreviews WHERE destination_id=?", (stored_destination_id,))
+            reviews = cursor.fetchall()
+
+            print(f"Reviews: {reviews}")
+
+            if not reviews:
+                return render_template('error.html', error='No reviews available for this property')
+
+    except sqlite3.Error as e:
+        print(f"SQLite error: {e}")
+        return render_template('error.html', error=f"Error fetching reviews from the database: {e}")
+
+    finally:
+        if cursor:
+            cursor.close()
+
+    return render_template('destinationreview.html', reviews=reviews)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000)
