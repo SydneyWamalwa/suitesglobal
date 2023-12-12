@@ -13,9 +13,9 @@ app.secret_key = secret_key
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587  # or your mail server's port
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'sydneywamalwa@gmail.com'
-app.config['MAIL_PASSWORD'] = 'yhww wxbu bksr tvee'
-app.config['MAIL_DEFAULT_SENDER'] = 'sydneywamalwa@gmail.com'
+app.config['MAIL_USERNAME'] = 'sales@bninternationalltd.com'
+app.config['MAIL_PASSWORD'] = 'vmoh zwbh edyl pard'
+app.config['MAIL_DEFAULT_SENDER'] = 'sales@bninternationalltd.com'
 
 app.config['SESSION_TYPE'] = 'filesystem'  # Use 'filesystem' for a session cookie
 Session(app)
